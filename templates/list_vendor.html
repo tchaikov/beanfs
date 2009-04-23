@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Vendor List{% endblock %}
+{% block head %}{% endblock %}
+{% block body %}
+  <ul class="vendorlist">
+    {% for vendor in vendors %}
+      <li>{{vendor.name|escape}}|{{vendor.phone|escape}}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
