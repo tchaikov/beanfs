@@ -37,15 +37,6 @@ class Vendor(db.Model):
     items = db.ListProperty(db.Key)
     comment = db.TextProperty()
     hit = db.IntegerProperty(default=0)
-    @staticmethod
-    def get_by_name(name):
-        query = Vendor.all().filter('name=',name)
-        vendors = list(query)
-        if not vendors:
-            return None
-        else:
-            assert len(vendors) == 1, "multiple vendors with identical name not allowed."
-            return vendors[0]
         
     def get_items(self):
         items = Item.get(self.items)

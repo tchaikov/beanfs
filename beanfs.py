@@ -18,6 +18,7 @@ from google.appengine.ext.webapp.util import login_required
 
 from models import Vendor, User
 from forms import VendorForm, ItemForm, UserForm
+from utils import exists_by_property, get1_by_property
 
 _DEBUG = True
 
@@ -70,7 +71,7 @@ class VendorAddPage(BaseRequestHandler):
   def post(self):
     data = VendorForm(data=self.request.POST)
     vendor_name = self.request.POST.get('name')
-    if data.is_valid() and Vendor.get_by_name(vendor_name) is None:
+    if data.is_valid() and not exists_by_property(Vendor, 'name', vendor_name):
       vendor = data.save(commit=False)
       vendor.put()
       self.redirect('/list_vendor')
@@ -79,7 +80,7 @@ class VendorAddPage(BaseRequestHandler):
 
 class ItemListPage(BaseRequestHandler):
   def get(self, vendor_name):
-    vendor = Vendor.get_by_name(vendor_name)
+    vendor = get1_by_property(Vendor, 'name', vendor_name)
     if vendor is None:
       logging.debug('vendor %s not found ' % vendor_name)
       self.redirect('/v/entry?vendor=%s' % vendor_name )
@@ -101,7 +102,7 @@ class ItemAddPage(BaseRequestHandler):
     data = ItemForm(data=self.request.POST)
     if data.is_valid():
       item = data.save(commit=False)
-      vendor = Vendor.get_by_name(vendor_name)
+      vendor = get1_by_property(Vendor, 'name', vendor_name)
       vendor.items.append(item.put())
       self.redirect('/v/%s/item/list' %  vendor_name)
     else:
@@ -119,16 +120,13 @@ class OrderPayPage(BaseRequestHandler):
 
 class UserProfilePage(BaseRequestHandler):
   def get(self, username):
-    user_list = list(User.all().filter('name =', username))
-    assert len(user_list) <= 1
+    user = get1_by_property(User, 'name', username)
 
-    if len(user_list) == 0:
-      self.redirect('/oops/invalid_user')
-    else:
-      user = user_list[0]
+    if user:
       self.generate('user_profile.html',
                     {'user':user})    
-    
+    else:
+      self.redirect('/oops/invalid_user')
 
 class UserAddPage(BaseRequestHandler):
   def get(self):
@@ -145,10 +143,11 @@ class UserAddPage(BaseRequestHandler):
       user = data.save(commit=False)
 
       # TODO: to avoid convert to list
-      if list(User.all().filter('name =', user.name)) == []:
+      if not exists_by_property(User, 'name', user.name):
         user.put()
         self.redirect('/u/%s/profile' % user.name)
       else:
+        logging.debug('user %s already exists!' % user.name)
         self.generate('add_user.html',
                       {'form':data})
       
