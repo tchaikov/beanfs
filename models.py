@@ -11,10 +11,21 @@ class User(db.Model):
     name = db.StringProperty(required=True)
     who = db.UserProperty(required=True)
 
+class Group(db.Model):
+    members = db.ListProperty(db.Key)
+    leader = db.ReferenceProperty(User)
+    
+class Image(db.Model):
+    ext = db.StringProperty()
+    thumb = db.BlobProperty(default=None)
+    def name(self):
+        return '.'.join([self.key(), self.thumb])
+    
 class Item(db.Model):
-    price = db.FloatProperty(required=True)
     name = db.StringProperty(required=True)
-
+    price = db.FloatProperty(required=True)
+    thumb = db.ReferenceProperty(Image)
+    
 class Purchase(db.Model):
     customer = db.ReferenceProperty(User)
     item = db.ReferenceProperty(Item)
@@ -26,7 +37,20 @@ class Vendor(db.Model):
     items = db.ListProperty(db.Key)
     comment = db.TextProperty()
     hit = db.IntegerProperty(default=0)
-
+    @staticmethod
+    def get_by_name(name):
+        query = Vendor.all().filter('name=',name)
+        vendors = list(query)
+        if not vendors:
+            return None
+        else:
+            assert len(vendors) == 1, "multiple vendors with identical name not allowed."
+            return vendors[0]
+        
+    def get_items(self):
+        items = Item.get(self.items)
+        return items
+    
 class Order(db.Model):
     contact = db.ReferenceProperty(User)
     vendor = db.ReferenceProperty(Vendor)
@@ -42,7 +66,4 @@ class Transaction(db.Model):
     order = db.ReferenceProperty(Order)
     bill = db.ReferenceProperty(Bill)
     purchased = db.BooleanProperty(default=False)
-    
-
-
     

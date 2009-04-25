@@ -39,7 +39,6 @@ class BaseRequestHandler(webapp.RequestHandler):
     values.update(template_values)
     directory = os.path.dirname(__file__)
     path = os.path.join(directory, os.path.join('templates', template_name))
-    logging.debug('rendering: %s' % path)
     self.response.out.write(template.render(path, values, debug=_DEBUG))
 
   def get_cookie(self, name):
@@ -52,16 +51,17 @@ class BaseRequestHandler(webapp.RequestHandler):
 class MainPage(BaseRequestHandler):
   @login_required
   def get(self):
-    self.redirect('/list_vendor')
+    self.generate('main.html')
 
-class ListVendorPage(BaseRequestHandler):
+class VendorListPage(BaseRequestHandler):
   def get(self):
-    vendor_list = Vendor.all().order('hit')
-    vendor_list = list(vendor_list)     # XXX, not sure what this is for
+    vendors = Vendor.all().order('hit')
+    vendors = list(vendors)     # convert the iterator to a list
+    logging.debug('%d vendors listed' % len(vendors))
     self.generate('list_vendor.html',
-                  {'vendors':vendor_list,})
+                  {'vendors':vendors,})
 
-class AddVendorPage(BaseRequestHandler):
+class VendorAddPage(BaseRequestHandler):
   def get(self):
     form = VendorForm()
     self.generate('add_vendor.html',
@@ -69,18 +69,67 @@ class AddVendorPage(BaseRequestHandler):
 
   def post(self):
     data = VendorForm(data=self.request.POST)
-    if data.is_valid():
+    vendor_name = self.request.POST.get('name')
+    if data.is_valid() and Vendor.get_by_name(vendor_name) is None:
       vendor = data.save(commit=False)
       vendor.put()
-      self.redirect('/items')
+      self.redirect('/list_vendor')
     else:
       self.redirect('/add_vendor')
 
+class ItemListPage(BaseRequestHandler):
+  def get(self, vendor_name):
+    vendor = Vendor.get_by_name(vendor_name)
+    if vendor is None:
+      logging.debug('vendor %s not found ' % vendor_name)
+      self.redirect('/v/entry?vendor=%s' % vendor_name )
+      return
+    items = list(vendor.get_items())
+    logging.debug('%d items listed' % len(items))
+    self.generate('list_item.html',
+                  {'items':items,})
+
+class ItemAddPage(BaseRequestHandler):
+  def get(self, vendor_name):
+    form = ItemForm()
+    self.generate('add_item.html',
+                  {'form':form,})
+
+  def post(self, vendor_name):
+    # TODO: need to append this item to the vendor which offers it
+    #       upload thumb
+    data = ItemForm(data=self.request.POST)
+    if data.is_valid():
+      item = data.save(commit=False)
+      vendor = Vendor.get_by_name(vendor_name)
+      vendor.items.append(item.put())
+      self.redirect('/v/%s/item/list' %  vendor_name)
+    else:
+      self.redirect('/v/%s/item/entry' % vendor_name)
+
+class OrderListPage(BaseRequestHandler):
+  pass
+
+class OrderAddPage(BaseRequestHandler):
+  pass
+
+class OrderPayPage(BaseRequestHandler):
+  pass
+
+class UserProfilePage(BaseRequestHandler):
+  pass
 
 application = webapp.WSGIApplication([
-  ('/', MainPage),
-  ('/add_vendor', AddVendorPage),
-  ('/list_vendor', ListVendorPage)], debug=True)
+  (r'/', MainPage),
+  (r'/u/(?P<user>.*)/profile', UserProfilePage),
+  (r'/v/all', VendorListPage),          # will be replaced with the main page
+  (r'/v/entry', VendorAddPage),
+  (r'/v/(?P<vendor>.*)/item/list', ItemListPage),
+  (r'/v/(?P<vendor>.*)/item/entry', ItemAddPage),
+  (r'/o/(?P<txn>.*)/list', OrderListPage),
+  (r'/o/(?P<txn>.*)/entry', OrderAddPage),
+  (r'/o/(?P<txn>.*)/pay', OrderPayPage),
+  ], debug=True)
 
 
 def main():

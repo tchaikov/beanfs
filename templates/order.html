@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Adding new vendor{% endblock %}
+{% block body %}
+<div id="toc">
+  <ul class="itemlist">
+    {% for vendor in vendors %}
+      <li><a href="{{ vendor.get_url }} ">{{ vendor.name|escape }}</a><li>
+    {% endfor %}
+  </ul>
+</div>
+<div id="items">
+  
+</div>
+{%endblock body %}

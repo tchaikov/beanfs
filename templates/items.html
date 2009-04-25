@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Item List{% endblock %}
+{% block head %}{% endblock %}
+{% block body %}
+  <ul class="item">
+    {% for item in items %}
+      <li>{{item.name}}|{{item.price}}|{{item.thumb}}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

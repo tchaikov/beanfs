@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Adding new dish{% endblock %}
+{% block body %}
+<form action="/add_item" method="post">
+  <div class="item">
+    {{ form.name.errors }}
+    <label for="id_name">Name:</label>
+    {{ form.name }}
+  </div>
+  <div class="item">
+    {{ form.price.errors }}
+    <label for="id_price">Price:</label>
+    {{ form.price }}
+  </div>
+  <div><input name="submit" type="submit" value="add"/></div>
+  <div><input name="cancel" type="submit" value="cancel"/></div>
+</form>
+{%endblock body %}
