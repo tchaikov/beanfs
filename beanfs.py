@@ -54,12 +54,12 @@ class MainPage(BaseRequestHandler):
   def get(self):
     self.redirect('/list_vendor')
 
-class VendorListPage(BaseRequestHandler):
+class ListVendorPage(BaseRequestHandler):
   def get(self):
     vendor_list = Vendor.all().order('hit')
     vendor_list = list(vendor_list)     # XXX, not sure what this is for
     self.generate('list_vendor.html',
-                  {'vendor_list':vendor_list,})
+                  {'vendors':vendor_list,})
 
 class AddVendorPage(BaseRequestHandler):
   def get(self):
@@ -80,7 +80,7 @@ class AddVendorPage(BaseRequestHandler):
 application = webapp.WSGIApplication([
   ('/', MainPage),
   ('/add_vendor', AddVendorPage),
-  ('/list_vendor', VendorListPage)], debug=True)
+  ('/list_vendor', ListVendorPage)], debug=True)
 
 
 def main():
