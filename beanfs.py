@@ -16,8 +16,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import login_required
 
-from models import Vendor
-from forms import VendorForm
+from models import Vendor, User
+from forms import VendorForm, ItemForm, UserForm
 
 _DEBUG = True
 
@@ -116,12 +116,52 @@ class OrderAddPage(BaseRequestHandler):
 class OrderPayPage(BaseRequestHandler):
   pass
 
+
 class UserProfilePage(BaseRequestHandler):
+  def get(self, username):
+    user_list = list(User.all().filter('name =', username))
+    assert len(user_list) <= 1
+
+    if len(user_list) == 0:
+      self.redirect('/oops/invalid_user')
+    else:
+      user = user_list[0]
+      self.generate('user_profile.html',
+                    {'user':user})    
+    
+
+class UserAddPage(BaseRequestHandler):
+  def get(self):
+    form = UserForm()
+    self.generate('add_user.html',
+                  {'form':form})
+
+  def post(self):
+    data = UserForm(data=self.request.POST)
+
+    if not data.is_valid():
+      self.redirect('/u/register')
+    else:
+      user = data.save(commit=False)
+
+      # TODO: to avoid convert to list
+      if list(User.all().filter('name =', user.name)) == []:
+        user.put()
+        self.redirect('/u/%s/profile' % user.name)
+      else:
+        self.generate('add_user.html',
+                      {'form':data})
+      
+
+
+class ErrorPage(BaseRequestHandler):
   pass
+
 
 application = webapp.WSGIApplication([
   (r'/', MainPage),
-  (r'/u/(?P<user>.*)/profile', UserProfilePage),
+  (r'/u/(?P<username>.*)/profile', UserProfilePage),
+  (r'/u/register', UserAddPage),        # TODO: need a complete impl of registration
   (r'/v/all', VendorListPage),          # will be replaced with the main page
   (r'/v/entry', VendorAddPage),
   (r'/v/(?P<vendor>.*)/item/list', ItemListPage),
@@ -129,6 +169,7 @@ application = webapp.WSGIApplication([
   (r'/o/(?P<txn>.*)/list', OrderListPage),
   (r'/o/(?P<txn>.*)/entry', OrderAddPage),
   (r'/o/(?P<txn>.*)/pay', OrderPayPage),
+  (r'/oops/(?P<error>.*)', ErrorPage),
   ], debug=True)
 
 

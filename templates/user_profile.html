@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Viewing user profile{% endblock %}
+
+{% block body %}
+
+<div id="user">
+  {{ user.name }} | {{ user.balance }} | {{ user.phone }} | {{ user.who }}
+</div>
+
+{%endblock body %}

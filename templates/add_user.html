@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Adding new dish{% endblock %}
+{% block body %}
+<form action="/u/register" method="post">
+  <div class="user">
+    {{ form.name.errors }}
+    <label for="id_name">Name:</label>
+    {{ form.name }}
+  </div>
+  
+  <div class="user">
+    {{ form.balance.errors }}
+    <label for="id_balance">Balance:</label>
+    {{ form.balance }}
+  </div>
+
+  <div class="user">
+    {{ form.phone.errors }}
+    <label for="id_phone">Phone:</label>
+    {{ form.phone }}
+  </div>
+
+  <div class="user">
+    {{ form.who.errors }}
+    <label for="id_who">Who:</label>
+    {{ form.who }}
+  </div>
+
+  <div><input name="submit" type="submit" value="add"/></div>
+  <div><input name="cancel" type="submit" value="cancel"/></div>
+</form>
+{%endblock body %}
