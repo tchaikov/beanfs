@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Group: {{group.name}} {% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block body %}
+{{group.name}}
+<form action="/add_group" method="post">
+  <table cellspacing="0">
+    <tbody>
+      <tr>
+        <th><label for="id_name">Group Name:</label></th>
+        <td><input type="text" name="name" value="{%if group.name %} {{group.name}} {%endif %}"/> </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_leader">Leader:</label></th>
+        <td><input type="text" name="leader" value="{%if group.leader %} {{group.leader.name}} {%endif %}" /> </td>
+      </tr>
+
+      <%for i, member in enumerate(group.members) %>
+      <tr>
+        <th><label> {{i}} </label></th>
+        <td><label> {{member.name}} </label></td>
+      </tr>
+      <%endfor %>
+    </tbody>
+  </table>
+  
+  <div><input name="submit" type="submit" value="add"/></div>
+  <div><input name="cancel" type="submit" value="cancel"/></div>
+
+{% endblock %}

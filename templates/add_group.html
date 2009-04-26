@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Adding a new group{% endblock %}
+
+{% block body %}
+
+<form action="/add_group" method="post">
+  <table cellspacing="0">
+    <tbody>
+      <tr>
+        <th><label for="id_name">Group Name:</label></th>
+        <td><input type="text" name="name" value="" /> </td>
+      </tr>
+
+      <tr>
+        <th><label for="id_leader">Leader:</label></th>
+        <td><input type="text" name="leader" value="" /> </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div><input name="submit" type="submit" value="add"/></div>
+  <div><input name="cancel" type="submit" value="cancel"/></div>
+</form>
+{%endblock body %}
