@@ -16,7 +16,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import login_required
 
-from models import Vendor, User
+from models import Vendor, User, Group
 from forms import VendorForm, ItemForm, UserForm
 from utils import exists_by_property, get1_by_property
 
@@ -121,7 +121,7 @@ class OrderPayPage(BaseRequestHandler):
 class UserProfilePage(BaseRequestHandler):
   def get(self, username):
     user = get1_by_property(User, 'name', username)
-
+    
     if user:
       self.generate('user_profile.html',
                     {'user':user})    
@@ -151,6 +151,32 @@ class UserAddPage(BaseRequestHandler):
         self.generate('add_user.html',
                       {'form':data})
       
+class GroupAddPage(BaseRequestHandler):
+  def _populate(self):
+    group = Group(name=self.request.POST['name'],
+                  leader=self.request.POST['leader'])
+
+    return group
+    
+  def get(self):
+    self.generate('add_group.html')
+
+  def post(self):
+    group = self._populate()
+    group.put()
+    self.redirect('/g/%s/profile' % group.name)
+      
+
+class GroupProfilePage(BaseRequestHandler):
+  def get(self, group_name):
+    group = get1_by_property(Group, 'name', group_name)
+
+    self.generate('group.html',
+                  {'group':group})
+
+  def post(self, group_key):
+    pass
+    
 
 
 class ErrorPage(BaseRequestHandler):
@@ -168,6 +194,8 @@ application = webapp.WSGIApplication([
   (r'/o/(?P<txn>.*)/list', OrderListPage),
   (r'/o/(?P<txn>.*)/entry', OrderAddPage),
   (r'/o/(?P<txn>.*)/pay', OrderPayPage),
+  (r'/add_group', GroupAddPage),
+  (r'/g/(?P<group>.*)/profile', GroupProfilePage),
   (r'/oops/(?P<error>.*)', ErrorPage),
   ], debug=True)
 

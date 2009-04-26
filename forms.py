@@ -1,5 +1,5 @@
 from google.appengine.ext.db import djangoforms
-from models import Vendor, Item, User
+from models import Vendor, Item, User, Group
 
 class VendorForm(djangoforms.ModelForm):
     class Meta:
@@ -14,3 +14,8 @@ class ItemForm(djangoforms.ModelForm):
 class UserForm(djangoforms.ModelForm):
     class Meta:
         model = User
+
+
+class GroupForm(djangoforms.ModelForm):
+    class Meta:
+        model = Group

@@ -11,10 +11,13 @@ class User(db.Model):
     name = db.StringProperty(required=True)
     who = db.UserProperty(required=True)
 
+
 class Group(db.Model):
+    name = db.StringProperty(required=True)
     members = db.ListProperty(db.Key)
-    leader = db.ReferenceProperty(User)
-    
+    leader = db.StringProperty(required=True)
+
+
 class Image(db.Model):
     ext = db.StringProperty()
     thumb = db.BlobProperty(default=None)

@@ -1,10 +1,10 @@
 def exists_by_property(model, prop, value):
-    records = model.all().filter('%s=' % prop, value)
+    records = model.all().filter('%s =' % prop, value)
 
     return records.count() == 0
 
 def get1_by_property(model, prop, value):
-    records = model.all().filter('%s=' % prop, value)
+    records = model.all().filter('%s =' % prop, value)
 
     if records.count() == 1:
         return records[0]
