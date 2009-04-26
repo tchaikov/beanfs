@@ -1,14 +1,26 @@
-{% extends "base.html" %}
-{% block title %}Adding new vendor{% endblock %}
-{% block body %}
-<div id="toc">
-  <ul class="itemlist">
-    {% for vendor in vendors %}
-      <li><a href="{{ vendor.get_url }} ">{{ vendor.name|escape }}</a><li>
-    {% endfor %}
-  </ul>
-</div>
-<div id="items">
-  
-</div>
-{%endblock body %}
+  {% extends "base.html" %}
+  {% block head %}
+    <link type="text/css" href="/css/vtab.css" rel="stylesheet" />
+    <script type="text/javascript" src="/js/jquery-1.3.2.min.js"></script>
+    <!-- <script type="text/javascript" src="/js/jquery-1.3.2.js"></script> -->
+    <script type="text/javascript" src="/js/ui/ui.core.js"></script>
+    <script type="text/javascript" src="/js/ui/ui.tabs.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        $("#tabs").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
+        $("#tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');
+      });
+    </script>
+  {% endblock %}
+  {% block title %}Put your order{% endblock %}
+  {% block body %}
+    <div id="tabs">
+      <ul>
+	{% for vendor in vendors %}
+	<li>
+	  <a href="{{ vendor.name|vendors_items_uri|escape }} "><span>{{ vendor.name|escape }}</span></a>
+	</li>
+	{% endfor %}
+      </ul>
+    </div>
+  {% endblock %}

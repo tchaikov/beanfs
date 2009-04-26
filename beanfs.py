@@ -74,11 +74,12 @@ class VendorAddPage(BaseRequestHandler):
     if data.is_valid() and not exists_by_property(Vendor, 'name', vendor_name):
       vendor = data.save(commit=False)
       vendor.put()
-      self.redirect('/list_vendor')
+      self.redirect('/v/all')
     else:
-      self.redirect('/add_vendor')
+      self.redirect('/v/entry')
 
 class ItemListPage(BaseRequestHandler):
+  
   def get(self, vendor_name):
     vendor = get1_by_property(Vendor, 'name', vendor_name)
     if vendor is None:
@@ -104,14 +105,19 @@ class ItemAddPage(BaseRequestHandler):
       item = data.save(commit=False)
       vendor = get1_by_property(Vendor, 'name', vendor_name)
       vendor.items.append(item.put())
+      vendor.put()
       self.redirect('/v/%s/item/list' %  vendor_name)
     else:
       self.redirect('/v/%s/item/entry' % vendor_name)
 
 class OrderListPage(BaseRequestHandler):
+  """list all orders by a given criteria (e.g. vendor, time, user)
+  """
   pass
 
 class OrderAddPage(BaseRequestHandler):
+  """collect all purchases put by user's group members, and call the vendor.
+  """
   pass
 
 class OrderPayPage(BaseRequestHandler):
@@ -182,7 +188,19 @@ class GroupProfilePage(BaseRequestHandler):
 class ErrorPage(BaseRequestHandler):
   pass
 
+class PurchasePage(BaseRequestHandler):
+  """ navigate in vendors, choose the item to purchase
+  """
+  def get(self):
+    vendors = list(Vendor.all())
+    self.generate('order.html',
+                  {'vendors':vendors,})
 
+  def post(self):
+    pass
+
+
+webapp.template.register_template_library('filters')
 application = webapp.WSGIApplication([
   (r'/', MainPage),
   (r'/u/(?P<username>.*)/profile', UserProfilePage),
@@ -197,6 +215,7 @@ application = webapp.WSGIApplication([
   (r'/add_group', GroupAddPage),
   (r'/g/(?P<group>.*)/profile', GroupProfilePage),
   (r'/oops/(?P<error>.*)', ErrorPage),
+  (r'/purchase', PurchasePage),
   ], debug=True)
 
 
