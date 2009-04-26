@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Vendor List{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block body %}
+  <table cellspacing="0">
+    <tbody>
+      <tr>
+        <th>Name</th> <th>Leader</th> <th>Members</th>
+      </tr>
+
+      {% for group in groups %}
+      <tr>
+        <td>{{group.name}}</td> <td>{{group.leader}}</td> <td>{{ group.members }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+{% endblock %}

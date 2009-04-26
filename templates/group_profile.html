@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Group: {{group.name}} {% endblock %}
+{% block title %}Group Profile for {{group.name}} {% endblock %}
 
 {% block head %}{% endblock %}
 
 {% block body %}
-{{group.name}}
-<form action="/add_group" method="post">
+
+<form action="/g/add_group" method="post">
   <table cellspacing="0">
     <tbody>
       <tr>
@@ -19,12 +19,12 @@
         <td><input type="text" name="leader" value="{%if group.leader %} {{group.leader.name}} {%endif %}" /> </td>
       </tr>
 
-      <%for i, member in enumerate(group.members) %>
+      {% for member in group.members %}
       <tr>
-        <th><label> {{i}} </label></th>
-        <td><label> {{member.name}} </label></td>
+        <th><label> Member: </label></th>
+        <td><label> {{ member.name }} </label></td>
       </tr>
-      <%endfor %>
+      {% endfor %}
     </tbody>
   </table>
   

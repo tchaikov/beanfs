@@ -134,6 +134,7 @@ class UserProfilePage(BaseRequestHandler):
     else:
       self.redirect('/oops/invalid_user')
 
+
 class UserAddPage(BaseRequestHandler):
   def get(self):
     form = UserForm()
@@ -158,6 +159,15 @@ class UserAddPage(BaseRequestHandler):
                       {'form':data})
       
 class GroupAddPage(BaseRequestHandler):
+  """
+  Add a group.
+  """
+
+  # TODO: Can we just use leader's name as group name? And group name
+  # is not the primary key.
+  
+  # FIXME: we should use djangoforms like approaches, but it seems
+  # that GAE's djangoforms does not support ListProperty well.
   def _populate(self):
     group = Group(name=self.request.POST['name'],
                   leader=self.request.POST['leader'])
@@ -173,11 +183,23 @@ class GroupAddPage(BaseRequestHandler):
     self.redirect('/g/%s/profile' % group.name)
       
 
+class GroupListPage(BaseRequestHandler):
+  """
+  List all groups.
+  """
+  def get(self):
+    self.generate("list_group.html",
+                  {"groups":list(Group.all())})
+
+
 class GroupProfilePage(BaseRequestHandler):
+  """
+  Show a group's information.
+  """
   def get(self, group_name):
     group = get1_by_property(Group, 'name', group_name)
 
-    self.generate('group.html',
+    self.generate('group_profile.html',
                   {'group':group})
 
   def post(self, group_key):
@@ -212,8 +234,9 @@ application = webapp.WSGIApplication([
   (r'/o/(?P<txn>.*)/list', OrderListPage),
   (r'/o/(?P<txn>.*)/entry', OrderAddPage),
   (r'/o/(?P<txn>.*)/pay', OrderPayPage),
-  (r'/add_group', GroupAddPage),
   (r'/g/(?P<group>.*)/profile', GroupProfilePage),
+  (r'/g/add_group', GroupAddPage),
+  (r'/g/list_group', GroupListPage),
   (r'/oops/(?P<error>.*)', ErrorPage),
   (r'/purchase', PurchasePage),
   ], debug=True)
