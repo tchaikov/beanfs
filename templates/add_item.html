@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Adding new dish{% endblock %}
 {% block body %}
-<form action="#" method="post">
+<form action="#" method="post" enctype="multipart/form-data">
   <div class="item">
     {{ form.name.errors }}
     <label for="id_name">Name:</label>
@@ -11,6 +11,10 @@
     {{ form.price.errors }}
     <label for="id_price">Price:</label>
     {{ form.price }}
+  </div>
+  <div class="item">
+    <label for="id_photo">Photo:</label>
+    <input type="file" name="photo" />
   </div>
   <div><input name="submit" type="submit" value="add"/></div>
   <div><input name="cancel" type="submit" value="cancel"/></div>

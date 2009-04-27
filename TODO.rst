@@ -9,6 +9,12 @@ UI
 * integrate with GoogleMap to find vendors around the user
 * add a member in group page should reassemble igoogle's todo list, i.e. adding just in place.
 
+restructure
+===========
+* separate beanfs.py into views.py and main.py
+* use a customized jquery ui with minimum set of functionality (so far tab only)
+
+
 Misc
 ====
 * use ajax libraries hosted by ajax.googleapis.com, like douban does

@@ -1,5 +1,7 @@
   <ul class="item">
     {% for item in items %}
-      <li>{{item.name}}|{{item.price}}|{{item.thumb}}</li>
+      <li>{{item.name}} | {{item.price}} | 
+	<img src="/image/{{item.photo.key.id}}" class="photo" alt="{{item.photo.name}}" />
+      </li>
     {% endfor %}
   </ul>

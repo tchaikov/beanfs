@@ -9,7 +9,7 @@ class VendorForm(djangoforms.ModelForm):
 class ItemForm(djangoforms.ModelForm):
     class Meta:
         model = Item
-        exclude = ['thumb']
+        exclude = ['photo']
 
 class UserForm(djangoforms.ModelForm):
     class Meta:

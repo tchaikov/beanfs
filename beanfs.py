@@ -11,12 +11,12 @@ import os
 import wsgiref.handlers
 
 from google.appengine.ext import db
-from google.appengine.api import users
+from google.appengine.api import users, images
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import login_required
 
-from models import Vendor, User, Group
+from models import Vendor, User, Group, Photo
 from forms import VendorForm, ItemForm, UserForm
 from utils import exists_by_property, get1_by_property
 
@@ -98,11 +98,13 @@ class ItemAddPage(BaseRequestHandler):
                   {'form':form,})
 
   def post(self, vendor_name):
-    # TODO: need to append this item to the vendor which offers it
+    # TODO: should be editing existing item if the name of item is identical with existing one
     #       upload thumb
+    #       resize thumb using google.appengine.api.images
     data = ItemForm(data=self.request.POST)
     if data.is_valid():
       item = data.save(commit=False)
+      item.photo = self.get_photo()
       vendor = get1_by_property(Vendor, 'name', vendor_name)
       vendor.items.append(item.put())
       vendor.put()
@@ -110,6 +112,18 @@ class ItemAddPage(BaseRequestHandler):
     else:
       self.redirect('/v/%s/item/entry' % vendor_name)
 
+  def get_photo(self):
+    img = self.request.get("photo", None)
+    if img:
+      logging.debug('img = %r' % dir(img) )
+    if img is None:
+      logging.debug('no image uploaded for new item!')
+      return None
+    photo = Photo(name = "foo.jpg", image=db.Blob(img))
+    logging.debug('image  %s uploaded for new item.' % photo.name )
+    photo.thumb = images.resize(photo.image, 200, 140)
+    return photo.put()
+  
 class OrderListPage(BaseRequestHandler):
   """list all orders by a given criteria (e.g. vendor, time, user)
   """
@@ -221,7 +235,33 @@ class PurchasePage(BaseRequestHandler):
   def post(self):
     pass
 
-
+class ImagePage(BaseRequestHandler):
+  def get_content_type(self, name):
+    types = {'.jpeg':'image/jpeg',
+             '.jpg':'image/jpeg',
+             '.gif':'image/gif',
+             '.png':'image/png'}
+    try:
+      ext = os.path.splitext(name)[1]
+      return types[ext]
+    except KeyError:
+      assert False, "Unknown picture extension: %s!" % ext
+      
+  def get(self, type, id):
+    photo = Photo.get_by_id(int(id))
+    if photo:
+      self.response.headers.add_header('Expires', 'Thu, 01 Dec 2014 16:00')
+      self.response.headers['Cache-Control'] = 'public, max-age=366000'
+      #self.response.headers['Content-type'] = self.get_content_type(photo.name)
+      # TODO: tell image type by looking at its name or read the image file header
+      self.response.headers['Content-type'] = self.get_content_type("xx.jpg")
+      if type == 'image':
+        self.response.out.write(photo.image)
+      else:
+        self.response.out.write(photo.thumb)
+    else:
+      self.error(404)
+        
 webapp.template.register_template_library('filters')
 application = webapp.WSGIApplication([
   (r'/', MainPage),
@@ -239,6 +279,8 @@ application = webapp.WSGIApplication([
   (r'/g/list_group', GroupListPage),
   (r'/oops/(?P<error>.*)', ErrorPage),
   (r'/purchase', PurchasePage),
+  (r'/(image)/(\d+)', ImagePage),
+  (r'/(thumb)/(\d+)', ImagePage),
   ], debug=True)
 
 

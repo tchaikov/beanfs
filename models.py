@@ -18,16 +18,17 @@ class Group(db.Model):
     leader = db.StringProperty(required=True)
 
 
-class Image(db.Model):
-    ext = db.StringProperty()
+class Photo(db.Model):
+    image = db.BlobProperty(default=None)
     thumb = db.BlobProperty(default=None)
+    name = db.StringProperty()
     def name(self):
-        return '.'.join([self.key(), self.thumb])
+        return '.'.join([self.key(), self.ext])
     
 class Item(db.Model):
     name = db.StringProperty(required=True)
     price = db.FloatProperty(required=True)
-    thumb = db.ReferenceProperty(Image)
+    photo = db.ReferenceProperty(Photo)
     
 class Purchase(db.Model):
     customer = db.ReferenceProperty(User)
