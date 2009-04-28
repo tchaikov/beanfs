@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}User Bill List{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+  <table cellspacing="0" id="user_bills">
+    <thead>
+      <tr>
+        <th>Group</th> <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ubill in user_bills %}
+      <tr>
+        <td>{{ubill.group_bill.payer.name}}</td>        
+        <td>{{ubill.group_bill.time}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+{% endblock %}

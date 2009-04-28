@@ -16,7 +16,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import login_required
 
-from models import Vendor, User, Group, Photo
+from models import Vendor, Item, User, Group, Photo, GroupBill, UserBill
 from forms import VendorForm, ItemForm, UserForm
 from utils import exists_by_property, get1_by_property
 
@@ -138,9 +138,100 @@ class OrderPayPage(BaseRequestHandler):
   pass
 
 
+class GroupBillListPage(BaseRequestHandler):
+  """
+  Show all group bills for one group.
+  """
+  def get(self, group_name):
+    group = get1_by_property(Group, 'name', group_name)
+
+    
+    self.generate('group_bill_list.html',
+                  {'group_bills':group.bills})
+        
+
+class GroupBillPage(BaseRequestHandler):
+  """
+  Show one group bill for the group
+  """
+  def get(self, bill_key):
+    group_bill = GroupBill().get(bill_key)
+    user_bills = [UserBill().get(key) for key in group_bill.user_bills]
+    
+    logging.info('group_bill.user_bills: %s' % group_bill.user_bills)
+    self.generate('group_bill.html',
+                  {'group_bill':group_bill,
+                   'user_bills':user_bills})
+
+    
+class UserBillListPage(BaseRequestHandler):
+  """
+  Show all user bills for one user.
+  """
+  def get(self, user_name):
+    user = get1_by_property(User, 'name', user_name)
+    self.generate('user_bill_list.html',
+                  {'user_bills':user.bills})
+
+
+class UserBillPage(BaseRequestHandler):
+  """
+  Show one user bill for the user
+  """
+  def get(self, bill_key):
+    bill = UserBill().get(bill_key)
+    self.generate('user_bill.html',
+                  {'user_bill':bill})
+
+
+class GroupBillAddPage(BaseRequestHandler):
+  """
+  for testing
+  """
+  def get(self):
+    self.generate('add_group_bill.html')
+
+  def post(self):
+    logging.info('GroupBillAddPage::post() is called\n')
+
+    group_name = self.request.POST.get('name')
+    group = get1_by_property(Group, 'name', group_name)
+
+    logging.info('Group Name is %s' % group_name)
+    
+    if not group.bills or group.bills == []:
+      group_bill = GroupBill(payer = get1_by_property(User, 'name', self.request.POST.get('payer')))
+      group_bill.put()
+      
+      usera = get1_by_property(User, 'name', 'yami')
+      user_billa = UserBill(user  = usera,
+                            items = [get1_by_property(Item, 'name', 'xiaochao').key()],
+                            group_bill = group_bill)
+      user_billa.put()
+      usera.bills.append(user_billa.key())
+
+      userb = get1_by_property(User,'name', 'hua')
+      user_billb = UserBill(user = userb,
+                            items = [get1_by_property(Item, 'name', 'xiaochao').key()],
+                            group_bill = group_bill)
+      user_billb.put()
+      userb.bills.append(user_billb.key())
+
+      usera.put()
+      userb.put()
+
+
+      group_bill.user_bills.append(user_billa.key())
+      group_bill.user_bills.append(user_billb.key())
+      group_bill.put()
+      
+      group.bills.append(group_bill)
+      
+    self.redirect('/g/bill/%s' % group_bill.key())
+      
 class UserProfilePage(BaseRequestHandler):
-  def get(self, username):
-    user = get1_by_property(User, 'name', username)
+  def get(self, user_name):
+    user = get1_by_property(User, 'name', user_name)
     
     if user:
       self.generate('user_profile.html',
@@ -287,6 +378,9 @@ application = webapp.WSGIApplication([
   (r'/g/(?P<group>.*)/profile', GroupProfilePage),
   (r'/g/add_group', GroupAddPage),
   (r'/g/list_group', GroupListPage),
+  (r'/g/add_group_bill', GroupBillAddPage),
+  (r'/g/bill/(.*)', GroupBillPage),
+  (r'/g/(.*)/bill', GroupBillListPage),
   (r'/oops/(?P<error>.*)', ErrorPage),
   (r'/purchase', PurchasePage),
   (r'/(image)/(\d+)', ImagePage),

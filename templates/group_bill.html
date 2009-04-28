@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Group Bill{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+  <label>Payer:</label> {{ group_bill.payer.name }}
+  <label>Time:</label> {{ group_bill.time}}
+  <label>User Bills:</label>
+  
+  <table cellspacing="0" id="group_bill">
+    <thead>
+      <tr>
+        <th>User</th> <th>Items</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ubill in user_bills %}
+      <tr>
+        <td>{{ubill.user.name}}</td>        
+        <td>
+          {% for item_key in ubill.items %}
+          {{ item_key|item_key2name }} 
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+{% endblock %}

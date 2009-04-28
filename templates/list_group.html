@@ -15,13 +15,13 @@
       <tbody>
       {% for group in groups %}
       <tr>
-        <td>{{group.name}}</td>
+        <td> <a href="/g/{{group.name}}/profile"> {{group.name}} </a></td>
         
-        <td>{{group.leader}}</td>
+        <td> <a href="/u/{{group.leader}}/profile"> {{group.leader}} </a></td>
         
         <td>
           {% for member in group.members %}
-          {{ member|user_key2name }}
+          <a href="/u/{{member|user_key2name}}/">{{ member|user_key2name }}</a>
           {% endfor %}
         </td>
       </tr>
