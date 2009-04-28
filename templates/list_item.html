@@ -1,7 +1,9 @@
   <ul class="item">
     {% for item in items %}
       <li>{{item.name}} | {{item.price}} | 
-	<img src="/image/{{item.photo.key.id}}" class="photo" alt="{{item.photo.name}}" />
+	<a href="/image/{{item.photo.key.id}}" class="photo" title="{{item.photo.name}}">
+	  <img src="/thumb/{{item.photo.key.id}}" class="photo" alt="{{item.photo.name}}" />
+	</a>
       </li>
     {% endfor %}
   </ul>

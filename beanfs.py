@@ -120,7 +120,6 @@ class ItemAddPage(BaseRequestHandler):
       logging.debug('no image uploaded for new item!')
       return None
     photo = Photo(name = "foo.jpg", image=db.Blob(img))
-    logging.debug('image  %s uploaded for new item.' % photo.name )
     photo.thumb = images.resize(photo.image, 200, 140)
     return photo.put()
   
