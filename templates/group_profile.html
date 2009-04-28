@@ -5,30 +5,35 @@
 {% block head %}{% endblock %}
 
 {% block body %}
+<form action="#" method="post">      
 
-<form action="/g/add_group" method="post">
   <table cellspacing="0">
     <tbody>
       <tr>
-        <th><label for="id_name">Group Name:</label></th>
-        <td><input type="text" name="name" value="{%if group.name %} {{group.name}} {%endif %}"/> </td>
+        <td><label for="id_name">Group Name:</label></td>
+        <td>{% if group.name %} {{group.name}} {% endif %} </td>
       </tr>
 
       <tr>
-        <th><label for="id_leader">Leader:</label></th>
-        <td><input type="text" name="leader" value="{%if group.leader %} {{group.leader.name}} {%endif %}" /> </td>
+        <td><label for="id_leader">Leader:</label></td>
+        <td>{%if group.leader %} {{group.leader}} {%endif %}</td>
       </tr>
 
       {% for member in group.members %}
       <tr>
-        <th><label> Member: </label></th>
-        <td><label> {{ member.name }} </label></td>
+        <td><label> Member: </label></td>
+        <td><label> {{ member|user_key2name }} </label></td>
       </tr>
       {% endfor %}
+
+      <tr>
+        <td><label> Add member: </label></td>
+        <td><input type="text" name="member" /></td>
+      </tr>
     </tbody>
   </table>
   
   <div><input name="submit" type="submit" value="add"/></div>
   <div><input name="cancel" type="submit" value="cancel"/></div>
-
+</form>
 {% endblock %}

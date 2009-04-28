@@ -216,8 +216,18 @@ class GroupProfilePage(BaseRequestHandler):
     self.generate('group_profile.html',
                   {'group':group})
 
-  def post(self, group_key):
-    pass
+  def post(self, group_name):
+    group = get1_by_property(Group, 'name', group_name)
+    user_name = self.request.POST.get('member')
+
+    user = get1_by_property(User, 'name', user_name)
+
+    if not user:
+      self.redirect('/oops/invalid_user')
+    else:
+      group.members.append(user.key())
+      group.put()
+      self.redirect('/g/%s/profile' % group.name)
     
 
 
