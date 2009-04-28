@@ -1,19 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Vendor List{% endblock %}
+{% block title %}Group List{% endblock %}
 
-{% block head %}{% endblock %}
+{% block head %}
+{% endblock %}
 
 {% block body %}
-  <table cellspacing="0">
-    <tbody>
+  <table cellspacing="0" id="groups">
+    <thead>
       <tr>
         <th>Name</th> <th>Leader</th> <th>Members</th>
       </tr>
-
+    </thead>
+      <tbody>
       {% for group in groups %}
       <tr>
-        <td>{{group.name}}</td> <td>{{group.leader}}</td> <td>{{ group.members }}</td>
+        <td>{{group.name}}</td>
+        
+        <td>{{group.leader}}</td>
+        
+        <td>
+          {% for member in group.members %}
+          {{ member|user_key2name }}
+          {% endfor %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>
