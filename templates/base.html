@@ -14,10 +14,10 @@
     <div id="header">
       <div class="login">
         {% if user %}
-        <span class="item nickname">{{ user.nickname }}</span> |
-        <span class="item"><a href="{{ logout_url|escape }}">Sign out</a></span>
+        <span class="nickname">{{ user.nickname }}</span> |
+        <span><a href="{{ logout_url|escape }}">Sign out</a></span>
         {% else %}
-        <span class="item"><a href="{{ login_url|escape }}">Sign in</a></span>
+        <span><a href="{{ login_url|escape }}">Sign in</a></span>
         {% endif %}
       </div>
     </div>
