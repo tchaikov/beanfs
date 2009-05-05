@@ -1,0 +1,9 @@
+.clearbox{clear:both;width:100%}
+.clearbox:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+.itemlst{float:right;margin:5px 0 15px;padding:0 0 5px;border-bottom:1px solid #ddd;overflow:hidden}
+.itemlstin{width:700px}
+.item{float:left;width:163px;margin:3px 59px 25px 0;*margin-right:45px}
+.item .caption{margin:6px 0 3px}
+.item .price{margin:6px 0 3px}
+.itemlst_photo{width:180px;height:180px;margin:0}
+.itemlst_photo:hover{background:#fcfcfc}

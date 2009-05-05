@@ -3,21 +3,9 @@
 
 {% block head %}
 
-<link type="text/css" href="/css/ui.tabs.css" rel="stylesheet" />
-<script type="text/javascript" src="/js/jquery-1.3.2.min.js"></script>
-<script type="text/javascript" src="/js/ui/ui.core.js"></script>
-<script type="text/javascript" src="/js/ui/ui.tabs.js"></script>
-<script type="text/javascript">
-  $(function() {
-    $("#nav").tabs();
-  });
-</script>
-
 {% endblock %}
 
 {% block body %}
-<div class="ui-tabs">
-<div id="nav" class="ui-tabs-nav">
   <ul>
     <li><a href="/v/all">list vendor</a></li>
     <li><a href="/v/entry">add vendor</a></li>
@@ -26,6 +14,4 @@
     <li><a href="/g/add_group">add group</a></li>
     <li><a href="/g/list_group">list group</a></li>
   </ul>
-</div>
-</div>
 {% endblock %}

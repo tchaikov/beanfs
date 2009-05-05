@@ -1,7 +1,15 @@
-  <ul class="item">
+  <div class="itemlst clearbox">
+    <div class="itemlstin">
     {% for item in items %}
-      <li>{{item.name}} | {{item.price}} | 
-	<img src="/image/{{item.photo.key.id}}" class="photo" alt="{{item.photo.name}}" />
-      </li>
+    <div class="item">
+      <span class=caption>{{item.name}}</span>
+      <span class=price>{{item.price}}</span>
+      <div class="photo">
+	<a href="/image/{{item.photo.key.id}}" class="itemlst_photo" title="{{item.photo.name}}">
+	  <img src="/thumb/{{item.photo.key.id}}" class="photo" alt="{{item.photo.name}}" />
+	</a>
+      </div>
+    </div>
     {% endfor %}
-  </ul>
+    </div>
+  </div>

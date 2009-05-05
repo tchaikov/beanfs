@@ -113,17 +113,40 @@ class ItemAddPage(BaseRequestHandler):
       self.redirect('/v/%s/item/entry' % vendor_name)
 
   def get_photo(self):
-    img = self.request.get("photo", None)
-    if img:
-      logging.debug('img = %r' % dir(img) )
-    if img is None:
+    if "photo" not in self.request.POST:
       logging.debug('no image uploaded for new item!')
       return None
-    photo = Photo(name = "foo.jpg", image=db.Blob(img))
-    logging.debug('image  %s uploaded for new item.' % photo.name )
-    photo.thumb = images.resize(photo.image, 200, 140)
-    return photo.put()
-  
+    try:
+      img = self.request.POST.get("photo")
+      img_name = img.filename
+      img_data = img.file.read()
+      img = images.Image(img_data)
+
+      img.im_feeling_lucky()
+      img.resize(640,480)
+      png_data = img.execute_transforms(images.PNG)
+
+      img.resize(200,140)
+      thumb = img.execute_transforms(images.PNG)
+
+      photo = Photo(name=img.filename,
+                    image=png_data,
+                    thumb=thumb)
+      return photo.put()
+    except images.BadImageError:
+      self.error(400)                                                                     
+      self.response.out.write(                                                            
+          'Sorry, we had a problem processing the image provided.')
+    except images.NotImageError:
+      self.error(400)
+      self.response.out.write(
+          'Sorry, we don\'t recognize that image format.'
+          'We can process JPEG, GIF, PNG, BMP, TIFF, and ICO files.')
+    except images.LargeImageError:
+      self.error(400)
+      self.response.out.write(
+          'Sorry, the image provided was too large for us to process.')
+
 class OrderListPage(BaseRequestHandler):
   """list all orders by a given criteria (e.g. vendor, time, user)
   """
@@ -337,17 +360,6 @@ class PurchasePage(BaseRequestHandler):
     pass
 
 class ImagePage(BaseRequestHandler):
-  def get_content_type(self, name):
-    types = {'.jpeg':'image/jpeg',
-             '.jpg':'image/jpeg',
-             '.gif':'image/gif',
-             '.png':'image/png'}
-    try:
-      ext = os.path.splitext(name)[1]
-      return types[ext]
-    except KeyError:
-      assert False, "Unknown picture extension: %s!" % ext
-      
   def get(self, type, id):
     photo = Photo.get_by_id(int(id))
     if photo:
@@ -355,11 +367,13 @@ class ImagePage(BaseRequestHandler):
       self.response.headers['Cache-Control'] = 'public, max-age=366000'
       #self.response.headers['Content-type'] = self.get_content_type(photo.name)
       # TODO: tell image type by looking at its name or read the image file header
-      self.response.headers['Content-type'] = self.get_content_type("xx.jpg")
+      self.response.headers['Content-type'] = 'image/png'
       if type == 'image':
         self.response.out.write(photo.image)
-      else:
+      elif type == "thumb":
         self.response.out.write(photo.thumb)
+      else:
+        self.error(500)
     else:
       self.error(404)
         
