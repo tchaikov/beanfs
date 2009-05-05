@@ -273,12 +273,13 @@ class UserAddPage(BaseRequestHandler):
     data = UserForm(data=self.request.POST)
 
     if not data.is_valid():
+      logging.debug('form data is not valid')
       self.redirect('/u/register')
     else:
       user = data.save(commit=False)
 
       # TODO: to avoid convert to list
-      if not exists_by_property(User, 'name', user.name):
+      if not exists_by_property(User, 'name', user.name):        
         user.put()
         self.redirect('/u/%s/profile' % user.name)
       else:
@@ -339,8 +340,12 @@ class GroupProfilePage(BaseRequestHandler):
     if not user:
       self.redirect('/oops/invalid_user')
     else:
+      # FIXME: two put()s should be transactional 
       group.members.append(user.key())
       group.put()
+
+      user.group = group.name
+      user.put()
       self.redirect('/g/%s/profile' % group.name)
     
 
@@ -353,8 +358,12 @@ class PurchasePage(BaseRequestHandler):
   """
   def get(self):
     vendors = list(Vendor.all())
+    username = 'yami' # FIXME: this is for testing
+    user = get1_by_property(User, 'name', username)
+    group = get1_by_property(Group, 'name', user.group)
     self.generate('order.html',
-                  {'vendors':vendors,})
+                  {'vendors':vendors,
+                   'group':group})
 
   def post(self):
     pass

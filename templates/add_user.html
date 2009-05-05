@@ -26,6 +26,12 @@
     {{ form.who }}
   </div>
 
+  <div class="user">
+    {{ form.group.errors }}
+    <label for="id_who">Group:</label>
+    {{ form.group }}
+  </div>
+  
   <div><input name="submit" type="submit" value="add"/></div>
   <div><input name="cancel" type="submit" value="cancel"/></div>
 </form>

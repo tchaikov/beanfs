@@ -11,6 +11,7 @@ class User(db.Model):
     name = db.StringProperty(required=True)
     who = db.UserProperty(required=True)
     bills = db.ListProperty(db.Key)
+    group = db.StringProperty(required=True)
 
 class Group(db.Model):
     name = db.StringProperty(required=True)

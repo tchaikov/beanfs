@@ -1,15 +1,52 @@
-  <div class="itemlst clearbox">
-    <div class="itemlstin">
-    {% for item in items %}
-    <div class="item">
-      <span class=caption>{{item.name}}</span>
-      <span class=price>{{item.price}}</span>
-      <div class="photo">
-	<a href="/image/{{item.photo.key.id}}" class="itemlst_photo" title="{{item.photo.name}}">
-	  <img src="/thumb/{{item.photo.key.id}}" class="photo" alt="{{item.photo.name}}" />
-	</a>
+<script type="text/javascript">
+  var gen_options = function (id, members) {
+    var member_selections = '<select xxxx>';
+    
+    for (member in members) {
+      member_selections = member_selections + '<option>' + member +'</option>'
+    }
+    $(id).innerHTML = member_selections;
+    member_selections = member_selections + '</select>'
+  }
+
+  var group_members = new Array();
+  var imember = 0;
+  <% for member in group.members %>
+    group_members[imember] = {{member|user_key2name}};
+    imember++;
+  <% endfor %>
+
+  gen_options("#members", group_members);
+</script>
+
+<table>
+  <thead>
+    <tr>
+      <div class="item">
+        <th><span class=caption> Name </span></th>
+        <th><span class=price>Price </span></th>
+        <th><div class="photo">Photo </div></th>
       </div>
-    </div>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr>     
+      
+      <div class="item">
+        <td> <span class=caption>{{item.name}}</span> </td>
+        <td> <span class=price>{{item.price}}</span> </td>
+        <td> <div class="photo">
+	    <a href="/image/{{item.photo.key.id}}" class="itemlst_photo" title="{{item.photo.name}}">
+	      <img src="/thumb/{{item.photo.key.id}}" class="photo" alt="{{item.photo.name}}" />
+	    </a>
+          </div>
+        </td>
+        <td>
+          <div id="members"></div>
+        </td>
+      </div>
+    </tr>
     {% endfor %}
-    </div>
-  </div>
+  </tbody>
+</table>
