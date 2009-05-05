@@ -129,7 +129,7 @@ class ItemAddPage(BaseRequestHandler):
       img.resize(200,140)
       thumb = img.execute_transforms(images.PNG)
 
-      photo = Photo(name=img.filename,
+      photo = Photo(name=img_name,
                     image=png_data,
                     thumb=thumb)
       return photo.put()
