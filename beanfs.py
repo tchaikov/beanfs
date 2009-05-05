@@ -361,6 +361,8 @@ class PurchasePage(BaseRequestHandler):
     username = 'yami' # FIXME: this is for testing
     user = get1_by_property(User, 'name', username)
     group = get1_by_property(Group, 'name', user.group)
+
+    logging.debug('PurchasePage: user.group=%s, group.name=%s\n' % (user.group, group.name))
     self.generate('order.html',
                   {'vendors':vendors,
                    'group':group})

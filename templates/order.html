@@ -11,7 +11,29 @@
         $("#tabs").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
         $("#tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');
       });
+
     </script>
+
+<script type="text/javascript">
+  var group_members = new Array();
+  var imember = 0;
+  {% for member in group.members %}
+    group_members[imember] = "{{ member|user_key2name }}";
+    imember++;
+  {% endfor %}
+  
+  var gen_options = function (id, members) {
+    var member_selections = '<select xxxx>';
+    
+    for (var i in members) {
+      member_selections = member_selections + '<option>' + members[i] +'</option>';
+    }
+    member_selections = member_selections + '</select>';
+    document.getElementById(id).innerHTML = member_selections;
+  }
+
+</script>
+
   {% endblock %}
   {% block title %}Put your order{% endblock %}
   {% block body %}
@@ -25,3 +47,4 @@
       </ul>
     </div>
   {% endblock %}
+

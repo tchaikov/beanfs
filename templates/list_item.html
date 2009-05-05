@@ -1,24 +1,3 @@
-<script type="text/javascript">
-  var gen_options = function (id, members) {
-    var member_selections = '<select xxxx>';
-    
-    for (member in members) {
-      member_selections = member_selections + '<option>' + member +'</option>'
-    }
-    $(id).innerHTML = member_selections;
-    member_selections = member_selections + '</select>'
-  }
-
-  var group_members = new Array();
-  var imember = 0;
-  <% for member in group.members %>
-    group_members[imember] = {{member|user_key2name}};
-    imember++;
-  <% endfor %>
-
-  gen_options("#members", group_members);
-</script>
-
 <table>
   <thead>
     <tr>
@@ -31,8 +10,7 @@
   </thead>
   <tbody>
     {% for item in items %}
-    <tr>     
-      
+    <tr>      
       <div class="item">
         <td> <span class=caption>{{item.name}}</span> </td>
         <td> <span class=price>{{item.price}}</span> </td>
@@ -49,4 +27,8 @@
     </tr>
     {% endfor %}
   </tbody>
+  <script type="text/javascript">
+    gen_options("members", group_members);
+  </script>
+
 </table>
