@@ -4,7 +4,7 @@ from google.appengine.api import images
 
 from base import BaseRequestHandler
 from utils import get1_by_property
-from models import Vendor
+from models import Vendor, Photo
 from forms import ItemForm
 
 

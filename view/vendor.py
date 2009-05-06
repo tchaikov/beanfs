@@ -3,6 +3,8 @@ import logging
 from base import BaseRequestHandler
 from models import Vendor
 from forms import VendorForm
+from utils import exists_by_property
+
 
 class VendorListPage(BaseRequestHandler):
   def get(self):
