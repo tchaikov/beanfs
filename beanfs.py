@@ -12,7 +12,7 @@ import wsgiref.handlers
 
 from google.appengine.ext import webapp
 
-from view import base, group, image, item, main, order, user, vendor
+from view import base, group, image, item, main, order, user, vendor, purchase
 
 webapp.template.register_template_library('filters')
 
@@ -31,7 +31,7 @@ application = webapp.WSGIApplication([
   (r'/g/add_group', group.GroupAddPage),
   (r'/g/list_group', group.GroupListPage),
   (r'/oops/(?P<error>.*)', base.ErrorPage),
-  (r'/purchase', order.PurchasePage),
+  (r'/purchase', purchase.PurchasePage),
   (r'/(image)/(\d+)', image.ImagePage),
   (r'/(thumb)/(\d+)', image.ImagePage),
   ], debug=True)
