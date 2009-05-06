@@ -14,6 +14,7 @@ class ItemForm(djangoforms.ModelForm):
 class UserForm(djangoforms.ModelForm):
     class Meta:
         model = User
+        exclude = ['who']
 
 
 class GroupForm(djangoforms.ModelForm):

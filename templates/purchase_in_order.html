@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Purchase in an Order{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+  <label>Vendor:</label> {{ order.vendor.name}}
+  <label>User Bills:</label>
+  
+  <table cellspacing="0" id="group_bill">
+    <thead>
+      <tr>
+        <th>User</th> <th>Item</th> <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for purchase in purchases %}
+      <tr>
+        <td>{{purchase.customer.name}}</td>        
+        <td>{{purchase.item.name}}</td>
+	<td>{{purchase.item.price}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+{% endblock %}

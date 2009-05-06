@@ -1,6 +1,7 @@
 
 functionality
 =============
+* notify user to order meal at noon using IM or email
 
 UI
 ===
