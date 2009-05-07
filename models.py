@@ -5,6 +5,8 @@
 
 from google.appengine.ext import db
 from itertools import chain
+from utils import find
+
 
 class User(db.Model):
     balance = db.FloatProperty(required=True, default=0.0)
@@ -64,7 +66,15 @@ class Vendor(db.Model):
     def get_items(self):
         items = Item.get(self.items)
         return items
-    
+
+    def get_item(self, name):
+        item_key = find(lambda item_key: Item.get(item_key).name == name,
+                        self.items)
+        
+        if item_key:
+            return Item.get(item_key)
+
+            
 class Order(db.Model):
     contact = db.ReferenceProperty(User)
     vendor = db.ReferenceProperty(Vendor)

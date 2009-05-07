@@ -13,5 +13,8 @@ handlers:
 - url: /images
   static_dir: images
 
+- url: /greybox
+  static_dir: 3rdparty/greybox
+
 - url: /.*
   script: beanfs.py

@@ -19,7 +19,8 @@ class ItemListPage(BaseRequestHandler):
     items = list(vendor.get_items())
     logging.debug('%d items listed' % len(items))
     self.generate('list_item.html',
-                  {'items':items,})
+                  {'items':items,
+                   'vendor':vendor_name})
 
 class ItemAddPage(BaseRequestHandler):
   def get(self, vendor_name):
@@ -76,3 +77,13 @@ class ItemAddPage(BaseRequestHandler):
       self.error(400)
       self.response.out.write(
           'Sorry, the image provided was too large for us to process.')
+
+
+class ItemProfilePage(BaseRequestHandler):
+  def get(self, vendor_name, item_name):
+    vendor = get1_by_property(Vendor, 'name', vendor_name)
+    item   = vendor.get_item(item_name)
+
+    self.generate('item_profile.html',
+                  {'vendor':vendor,
+                   'item':item})

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %} Item Details {% endblock %}
+{% block head %} {% endblock %}
+
+{% block body %}
+{{vendor.name}}
+
+<a href="/image/{{item.photo.key.id}}" title="{{item.photo.name}}">
+  <img src="/thumb/{{item.photo.key.id}}" alt="{{item.photo.name}}" />
+</a>
+
+{{item.name}}
+{{item.price}}
+
+{% endblock %}
