@@ -2,16 +2,23 @@
 
 {% block title %} Adding a new group {% endblock %}
 {% block head %}
+{% endblock %}
+
+{% block body %}
 <script type="text/javascript">
     var GB_ROOT_DIR = "/greybox/";
+
+    $(function () {
+      $("a.gbshow", this).click(function() {
+         return GB_show(this.innerHTML, this.href);
+     });
+    });
+    
 </script>
 <script type="text/javascript" src="/greybox/AJS.js"></script>
 <script type="text/javascript" src="/greybox/AJS_fx.js"></script>
 <script type="text/javascript" src="/greybox/gb_scripts.js"></script>
 <link href="/greybox/gb_styles.css" rel="stylesheet" type="text/css" />    
-{% endblock %}
-
-{% block body %}
 
 
   <div class="itemlst clearbox">
@@ -23,8 +30,8 @@
 	  <img src="/thumb/{{item.photo.key.id}}" class="photo" alt="{{item.photo.name}}" />
 	</a>
       </div>
-      <a href="/v/{{vendor}}/item/{{item.name}}/profile" rel="gb_page[200,300]"><span class=caption>{{item.name}}</span></a>
-      <span class=price>{{item.price}}</span>
+      <a href="/v/{{vendor}}/item/{{item.name}}/profile" class="gbshow">{{item.name}}</a>
+       | {{item.price}}
     </div>
     {% endfor %}
     </div>
