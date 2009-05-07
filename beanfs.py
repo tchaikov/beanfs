@@ -28,7 +28,6 @@ application = webapp.WSGIApplication([
   (r'/o/(?P<txn>.*)/list', order.OrderListPage),
   (r'/o/(?P<txn>.*)/entry', order.OrderAddPage),
   (r'/o/(?P<txn>.*)/pay', order.OrderPayPage),
-  (r'/order', order.OrderPage),
   (r'/g/(?P<group>.*)/profile', group.GroupProfilePage),
   (r'/g/add_group', group.GroupAddPage),
   (r'/g/list_group', group.GroupListPage),

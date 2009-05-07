@@ -35,14 +35,6 @@ class OrderAddPage(BaseRequestHandler):
   def get(self):
     pass
 
-
-class OrderPage(BaseRequestHandler):
-  """
-  show a page for user to choose which item to order.
-  """
-  def get(self):
-    self.generate('order_for_item.html')
-
   
 class OrderPayPage(BaseRequestHandler):
   pass
