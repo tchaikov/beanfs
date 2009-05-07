@@ -1,3 +1,5 @@
+import simplejson
+
 from base import BaseRequestHandler
 from models import Vendor, Group
 
@@ -23,17 +25,38 @@ class OrderListPage(BaseRequestHandler):
                      'purchases':purchases})
       
 class OrderAddPage(BaseRequestHandler):
-  """collect all purchases put by user's group members, and call the vendor.
+  """collect all purchases in an event, and call the vendor.
   """
-  def collect_purchases(self, group_key):
+  def get(self, event_key):
     """collect all new purchases in a group indicated by `group_key`
+    TODO: maybe we need send a JSON repsentation to the client?
     """
-    group = Group.get(group_key)
-    assert group is not None, "the user should belong to an existing group"
-    #members = User.get
+    event = Event.get(event_key)
+    if not event:
+      self.error(404)
+    self.generate('put_order.html',
+                  {'vendor':event.vendor,
+                   'purchases':event.purchases})
     
-  def get(self):
-    pass
+  def post(self, event_key):
+    """save the new order into db
+    """
+    event = Event.get(event_key)
+    if not event:
+      self.error(404)
+
+    json = self.request.get('json')
+    json = simplejson.loads(json)
+    purchases = []
+    for p in json['purchases']:
+      purchase = Purchase.get(p['key'])
+      purchase.item = Item.get(p['item'])
+      purchase.status = 'collected'
+      purchases.append(purchase.put())
+    order = Order(contact=users.get_current_user(),
+                  vendor=event.vendor,
+                  purchases=purchases)
+    order.put()
 
 class OrderPayPage(BaseRequestHandler):
   pass

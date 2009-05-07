@@ -16,7 +16,7 @@ class User(db.Model):
 class Group(db.Model):
     name = db.StringProperty(required=True)
     members = db.ListProperty(db.Key)
-    leader = db.StringProperty(required=True)
+    leader = db.UserProperty()
     def get_members(self):
         return User.get(self.members)
 
@@ -33,11 +33,12 @@ class Item(db.Model):
     photo = db.ReferenceProperty(Photo)
     
 class Purchase(db.Model):
-    customer = db.ReferenceProperty(User)
+    customer = db.UserProperty(required=True)
     item = db.ReferenceProperty(Item)
     fallbacks = db.ListProperty(db.Key)
     status = db.StringProperty(default='new', choices=('new', 'collected', 'payed'))
-
+    event = db.ReferenceProperty(Event)
+    
     @staticmethod
     def get_purchase_of_user(user, status='new'):
         query = db.Query(Purchase).filter('customer = ', user)
@@ -64,9 +65,19 @@ class Vendor(db.Model):
     def get_items(self):
         items = Item.get(self.items)
         return items
+
+class Event(db.Model):
+    vendor = db.ReferenceProperty(Vendor)
+    advocate = db.UserProperty()
+    group = db.ReferenceProperty(Group)
+    is_open = db.BooleanProperty(default=True)
     
+    @property
+    def purchases(self):
+        return db.Query(Purchase).filter('event = ', self)
+        
 class Order(db.Model):
-    contact = db.ReferenceProperty(User)
+    contact = db.UserProperty(required=True)
     vendor = db.ReferenceProperty(Vendor)
     purchases = db.ListProperty(db.Key)
     time = db.DateTimeProperty(required=True, auto_now_add=True)
@@ -76,7 +87,7 @@ class Order(db.Model):
         return ps
     
 class Bill(db.Model):
-    payer = db.ReferenceProperty(User)
+    payer = db.UserProperty(required=True)
     items = db.ListProperty(db.Key)
     time = db.DateTimeProperty(required=True, auto_now_add=True)
 
