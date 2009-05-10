@@ -57,7 +57,7 @@ var init_purchase_form = function(form) {
         for (t in selected) { if (!hash[t]) deselect(t) }
     };
     
-    update();
+    //    update();
     $(form).submit(function() {
         var sid = $(this).attr('action').split('/')[3];
         remote_submit_json(this, function(data) {
@@ -84,7 +84,7 @@ var init_purchase_form = function(form) {
         var content = tags.join(' ');
 	// form.tags.value = (content.length > 1) ? content+' ' : content; 
 	form.tags.value = "foo bar";
-	$('input[@name=tags]', html).val("foo bar");
+	$("input[name='tags']", html).val("foo bar");
         form.tags.focus();
     });
 }
