@@ -31,7 +31,29 @@ class Item(db.Model):
     name = db.StringProperty(required=True)
     price = db.FloatProperty(required=True)
     photo = db.ReferenceProperty(Photo)
+
+class Vendor(db.Model):
+    name = db.StringProperty(required=True)
+    phone = db.PhoneNumberProperty(required=True)
+    items = db.ListProperty(db.Key)
+    comment = db.TextProperty()
+    hit = db.IntegerProperty(default=0)
+        
+    def get_items(self):
+        items = Item.get(self.items)
+        return items
+
+class Event(db.Model):
+    vendor = db.ReferenceProperty(Vendor)
+    advocate = db.UserProperty()
+    group = db.ReferenceProperty(Group)
+    is_open = db.BooleanProperty(default=True)
     
+    @property
+    def purchases(self):
+        return db.Query(Purchase).filter('event = ', self)
+        
+
 class Purchase(db.Model):
     customer = db.UserProperty(required=True)
     item = db.ReferenceProperty(Item)
@@ -55,27 +77,7 @@ class Purchase(db.Model):
         return chain(Purchase.get_purchase_of_user(m) \
                      for m in group.get_members())
             
-class Vendor(db.Model):
-    name = db.StringProperty(required=True)
-    phone = db.PhoneNumberProperty(required=True)
-    items = db.ListProperty(db.Key)
-    comment = db.TextProperty()
-    hit = db.IntegerProperty(default=0)
-        
-    def get_items(self):
-        items = Item.get(self.items)
-        return items
 
-class Event(db.Model):
-    vendor = db.ReferenceProperty(Vendor)
-    advocate = db.UserProperty()
-    group = db.ReferenceProperty(Group)
-    is_open = db.BooleanProperty(default=True)
-    
-    @property
-    def purchases(self):
-        return db.Query(Purchase).filter('event = ', self)
-        
 class Order(db.Model):
     contact = db.UserProperty(required=True)
     vendor = db.ReferenceProperty(Vendor)

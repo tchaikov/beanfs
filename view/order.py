@@ -1,4 +1,4 @@
-import simplejson
+from django.utils import simplejson
 
 from base import BaseRequestHandler
 from models import Vendor, Group
@@ -60,16 +60,4 @@ class OrderAddPage(BaseRequestHandler):
 
 class OrderPayPage(BaseRequestHandler):
   pass
-
-class PurchasePage(BaseRequestHandler):
-
-  """
-  Show all user bills for one user.
-  """
-  def get(self, purchase_key):
-      pass
-
-  def post(self):
-    pass
-
 

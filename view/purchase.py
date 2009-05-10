@@ -1,5 +1,7 @@
 import logging
 
+from django.utils import simplejson
+
 from base import BaseRequestHandler
 from models import Purchase, Vendor
 from utils import exists_by_property
