@@ -10,6 +10,7 @@
       $(function() {
         $("#tabs").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
         $("#tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');
+        $("#tabs").tabs('select', default_vendor);
       });
     </script>
     <script type="text/javascript" src="/js/purchase.js"></script>
@@ -27,7 +28,7 @@
       <ul>
 	{% for vendor in vendors %}
 	<li>
-	  <a href="{{ vendor.name|vendors_items_uri|escape }} "><span>{{ vendor.name|escape }}</span></a>
+	  <a href="{{ vendor.name|vendors_items_uri|escape }}?event={{event.key}}"><span>{{ vendor.name|escape }}</span></a>
 	</li>
 	{% endfor %}
       </ul>

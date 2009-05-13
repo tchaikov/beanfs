@@ -19,6 +19,20 @@ var get_form_fields = function(form) {
     return param;
 }
 
+$.post_withck = function( url, data, callback, type ) {
+    if ($.isFunction(data)) {
+        callback = data;
+        data = {};
+    }
+    return $.ajax({
+        type: "POST",
+        url: url,
+        data: $.extend(data,{ck:get_cookie('ck')}),
+        success: callback,
+        dataType: type
+    });
+}
+
 var remote_submit_json = function(form, func, disable, action) {
     var fvalue = get_form_fields(form);
     if(fvalue['err'] != undefined) return;

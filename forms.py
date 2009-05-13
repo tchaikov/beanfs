@@ -20,3 +20,9 @@ class UserForm(djangoforms.ModelForm):
 class GroupForm(djangoforms.ModelForm):
     class Meta:
         model = Group
+
+class EventForm(db.ModelForm):
+    class Meta:
+        model = Event
+        exclude = ['advocate', 'is_open']
+    

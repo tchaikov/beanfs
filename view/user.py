@@ -1,8 +1,10 @@
 import logging
 
 from base import BaseRequestHandler
+from models import Vendor
 from forms import UserForm
 from utils import exists_by_property
+
 
 class UserAddPage(BaseRequestHandler):
   def get(self):
@@ -34,6 +36,7 @@ class UserProfilePage(BaseRequestHandler):
     
     if user:
       self.generate('user_profile.html',
-                    {'user':user})    
+                    {'user':user,
+                     'vendors':Vendor.all()})    
     else:
       self.redirect('/oops/invalid_user')

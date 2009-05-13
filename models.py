@@ -11,7 +11,10 @@ class User(db.Model):
     phone = db.PhoneNumberProperty(required=True)
     name = db.StringProperty(required=True)
     who = db.UserProperty(required=True)
-    group = db.ListProperty(db.Key)
+    groups = db.ListProperty(db.Key)
+
+    def get_groups(self):
+        return Group.get(self.groups)
 
 class Group(db.Model):
     name = db.StringProperty(required=True)
@@ -20,6 +23,9 @@ class Group(db.Model):
     def get_members(self):
         return User.get(self.members)
 
+    def get_open_events(self):
+        return db.Query(Event).filter('group = ', self).filter('is_open = ', True)
+    
 class Photo(db.Model):
     image = db.BlobProperty(default=None)
     thumb = db.BlobProperty(default=None)

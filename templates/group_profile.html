@@ -18,8 +18,8 @@
         <td><label for="id_leader">Leader:</label></td>
         <td>{%if group.leader %} {{group.leader}} {%endif %}</td>
       </tr>
-
-      {% for member in group.members %}
+      
+     {% for member in group.members %}
       <tr>
         <td><label> Member: </label></td>
         <td><label> {{ member|user_key2name }} </label></td>

@@ -7,4 +7,29 @@
   {{user.group.name}} | {{ user.name }} | {{ user.balance }} | {{ user.phone }} | {{ user.who }}
 </div>
 
+Ongoing events:
+<ul>
+  {% for group in user.get_groups %}
+  <li> {{group.name}} 
+    <ul>
+      {% for event in group.get_open_events %}
+      <li><a href="/e/{{ event.key }}/purchase">{{event.vendor.name}}</a></li>
+      {% endfor %}
+    </ul>
+  </li>
+  {% endfor %}
+</ul>
+
+Create an event:
+<form action="/e/entry" name="new_event" method="post">
+  <select name="group">
+    {% for group in user.get_groups %}
+    <option value="{{ group.key }}">{{ group.name }}</option>
+  </select>
+  <select name="vendor">
+    {% for vendor in vendors %}
+    <option value="{{ vendor.key }}">{{ vendor.name }}</option>
+    {% endfor %}
+  </select>
+</form>
 {%endblock body %}
