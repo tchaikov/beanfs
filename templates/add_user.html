@@ -31,7 +31,13 @@ $(document).ready(function () {
     {{ form.name }}
     <span id="username_validator"></span>
   </div>
-  
+
+  <select name="group" multiple size=5>
+    {% for group in groups %}
+    <option value="{{group.key.id}}"> {{group.name}} </option>
+    {% endfor %}
+  </select>
+ 
   <div><input name="submit" type="submit" value="add"/></div>
   <div><input name="cancel" type="submit" value="cancel"/></div>
 </form>

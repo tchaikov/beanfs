@@ -28,12 +28,14 @@ class UserAddPage(BaseRequestHandler):
 
       if not exists_by_property(User, 'name', user.name):
         user.who = users.get_current_user()
+        user.groups = [db.Key(k) for k in self.request.POST.getall('group')]
         user.put()
         self.redirect('/u/%s/profile' % user.name)
       else:
         logging.debug('user %s already exists!' % user.name)
         self.generate('add_user.html',
-                      {'form':data})
+                      {'form':data,
+                       'groups':Group.all()})
       
 
 class UserProfilePage(BaseRequestHandler):
