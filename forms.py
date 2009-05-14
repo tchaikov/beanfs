@@ -1,5 +1,5 @@
 from google.appengine.ext.db import djangoforms
-from models import Vendor, Item, User, Group
+from models import Vendor, Item, User, Group, Event
 
 class VendorForm(djangoforms.ModelForm):
     class Meta:
@@ -14,14 +14,14 @@ class ItemForm(djangoforms.ModelForm):
 class UserForm(djangoforms.ModelForm):
     class Meta:
         model = User
-        exclude = ['who']
+        exclude = ['who', 'groups']
 
 
 class GroupForm(djangoforms.ModelForm):
     class Meta:
         model = Group
 
-class EventForm(db.ModelForm):
+class EventForm(djangoforms.ModelForm):
     class Meta:
         model = Event
         exclude = ['advocate', 'is_open']

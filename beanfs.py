@@ -12,7 +12,7 @@ import wsgiref.handlers
 
 from google.appengine.ext import webapp
 
-from view import base, group, image, item, main, order, user, vendor, purchase
+from view import base, group, image, item, main, order, user, vendor, purchase, event
 
 webapp.template.register_template_library('filters')
 

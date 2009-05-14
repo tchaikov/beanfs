@@ -1,4 +1,4 @@
-from models import Group
+from models import Group, User
 from base import BaseRequestHandler
 from utils import get1_by_property
 
@@ -13,8 +13,9 @@ class GroupAddPage(BaseRequestHandler):
   # FIXME: we should use djangoforms like approaches, but it seems
   # that GAE's djangoforms does not support ListProperty well.
   def _populate(self):
+    leader = User.user(self.request.POST['leader'])
     group = Group(name=self.request.POST['name'],
-                  leader=self.request.POST['leader'])
+                  leader=leader)
 
     return group
     

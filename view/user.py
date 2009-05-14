@@ -1,27 +1,35 @@
 import logging
 
+from google.appengine.api import users
+from google.appengine.ext import db
+
 from base import BaseRequestHandler
-from models import Vendor
+from models import Vendor, User, Group
 from forms import UserForm
-from utils import exists_by_property
+from utils import exists_by_property, get1_by_property
 
 
 class UserAddPage(BaseRequestHandler):
   def get(self):
     form = UserForm()
     self.generate('add_user.html',
-                  {'form':form})
-
+                  {'form':form,
+                   'groups':Group.all()})
+    
   def post(self):
     data = UserForm(data=self.request.POST)
 
+    logging.info(self.request.POST)
+    
     if not data.is_valid():
       self.redirect('/u/register')
     else:
       user = data.save(commit=False)
 
-      # TODO: to avoid convert to list
       if not exists_by_property(User, 'name', user.name):
+        user.who = users.get_current_user()
+        user.groups = [db.Key(k) for k in self.request.POST.getall('group')]
+
         user.put()
         self.redirect('/u/%s/profile' % user.name)
       else:

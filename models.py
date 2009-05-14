@@ -5,17 +5,25 @@
 
 from google.appengine.ext import db
 from itertools import chain
+from utils import get1_by_property
+
 
 class User(db.Model):
     balance = db.FloatProperty(required=True, default=0.0)
     phone = db.PhoneNumberProperty(required=True)
     name = db.StringProperty(required=True)
-    who = db.UserProperty(required=True)
+    who = db.UserProperty()    
     groups = db.ListProperty(db.Key)
 
     def get_groups(self):
         return Group.get(self.groups)
+    
+    @staticmethod
+    def user(name):
+        """Get google user by name"""
+        return get1_by_property(User, 'name', name).who
 
+    
 class Group(db.Model):
     name = db.StringProperty(required=True)
     members = db.ListProperty(db.Key)
