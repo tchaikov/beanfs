@@ -1,9 +1,10 @@
 import logging
 
 from django.utils import simplejson
+from google.appengine.api import users
 
 from base import BaseRequestHandler
-from models import Event
+from models import Event, Group, Vendor
 from forms import EventForm
 from utils import exists_by_property
 
@@ -16,13 +17,11 @@ class AddPage(BaseRequestHandler):
       vendor = self.request.POST['vendor']
       event = Event(group = Group.get(group),
                     vendor = Vendor.get(vendor),
-                    advocate = user.get_current_user())
-      event.put
-      if data.is_valid():
-          event = data.save(commit=False)
-          event.advocate = user.get_current_user()
-          event.put()
-          
+                    advocate = users.get_current_user())
+      
+      event.put()
+      
+      
 class AddPurchase(BaseRequestHandler):
     def post(self):
         json = simplejson.loads(self.request.body)

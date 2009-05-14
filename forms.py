@@ -16,11 +16,9 @@ class UserForm(djangoforms.ModelForm):
         model = User
         exclude = ['balance', 'who', 'phone', 'groups']
 
-
 class GroupForm(djangoforms.ModelForm):
     class Meta:
         model = Group
-
 
 class EventForm(djangoforms.ModelForm):
     group = djangoforms.forms.CharField( \

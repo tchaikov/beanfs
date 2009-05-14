@@ -6,6 +6,8 @@
 from google.appengine.api import users
 from google.appengine.ext import db
 from itertools import chain
+from utils import get1_by_property
+
 
 from utils import get1_by_property
 
@@ -13,12 +15,22 @@ class User(db.Model):
     balance = db.FloatProperty(required=True, default=0.0)
     #phone = db.PhoneNumberProperty(required=True)
     name = db.StringProperty(required=True)
+<<<<<<< HEAD:models.py
     who = db.UserProperty()
+=======
+    who = db.UserProperty()    
+>>>>>>> d061e704d67d0c52fc063b6b3a619c2f40cd4e6f:models.py
     groups = db.ListProperty(db.Key)
 
     def get_groups(self):
         return Group.get(self.groups)
+    
+    @staticmethod
+    def user(name):
+        """Get google user by name"""
+        return get1_by_property(User, 'name', name).who
 
+<<<<<<< HEAD:models.py
     @staticmethod
     def get_current_user():
         user = get1_by_property(User, 'who', users.get_current_user())
@@ -33,6 +45,9 @@ class User(db.Model):
             return []
     
 
+=======
+    
+>>>>>>> d061e704d67d0c52fc063b6b3a619c2f40cd4e6f:models.py
 class Group(db.Model):
     name = db.StringProperty(required=True)
     members = db.ListProperty(db.Key)
