@@ -1,31 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Adding new dish{% endblock %}
 {% block body %}
+<script language="javascript">
+$(document).ready(function () {
+  $("#id_name").blur(function () {
+    $("#usernamevalidator").removeClass("error").addClass("okay").text("checking availability...")
+    $.ajax({
+      type: "post",
+      url:  "/u/check-username",
+      data: "{'username':'"+this.value+"'}",
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      success: function (msg) {
+        if (msg.is_available = true) {
+          $("#usernamevalidator").removeClass("error").addClass("okay").text("username available")
+        } else {
+          $("#usernamevalidator").removeClass("okay").addClass("error").text("username unavailable")
+        }
+      }
+    })
+  })
+})
+
+</script>
+
 <form action="/u/register" method="post">
   <div class="user">
     {{ form.name.errors }}
     <label for="id_name">Name:</label>
     {{ form.name }}
+    <span id="username_validator"></span>
   </div>
   
-  <div class="user">
-    {{ form.balance.errors }}
-    <label for="id_balance">Balance:</label>
-    {{ form.balance }}
-  </div>
-
-  <div class="user">
-    {{ form.phone.errors }}
-    <label for="id_phone">Phone:</label>
-    {{ form.phone }}
-  </div>
-
-  <div class="user">
-    {{ form.who.errors }}
-    <label for="id_who">Who:</label>
-    {{ form.who }}
-  </div>
-
   <div><input name="submit" type="submit" value="add"/></div>
   <div><input name="cancel" type="submit" value="cancel"/></div>
 </form>

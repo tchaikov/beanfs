@@ -25,6 +25,7 @@ Create an event:
   <select name="group">
     {% for group in user.get_groups %}
     <option value="{{ group.key }}">{{ group.name }}</option>
+    {% endfor %}
   </select>
   <select name="vendor">
     {% for vendor in vendors %}
@@ -32,4 +33,4 @@ Create an event:
     {% endfor %}
   </select>
 </form>
-{%endblock body %}
+{% endblock %}

@@ -3,18 +3,35 @@
 # Copyright 2009 Kov Chai <tchaikov@gmail.com>
 #
 
+from google.appengine.api import users
 from google.appengine.ext import db
 from itertools import chain
 
+from utils import get1_by_property
+
 class User(db.Model):
     balance = db.FloatProperty(required=True, default=0.0)
-    phone = db.PhoneNumberProperty(required=True)
+    #phone = db.PhoneNumberProperty(required=True)
     name = db.StringProperty(required=True)
-    who = db.UserProperty(required=True)
+    who = db.UserProperty()
     groups = db.ListProperty(db.Key)
 
     def get_groups(self):
         return Group.get(self.groups)
+
+    @staticmethod
+    def get_current_user():
+        user = get1_by_property(User, 'who', users.get_current_user())
+        return user
+    
+    @staticmethod
+    def get_groups_of_current_user():
+        user = User.get_current_user()
+        if user:
+            return user.get_groups()
+        else:
+            return []
+    
 
 class Group(db.Model):
     name = db.StringProperty(required=True)

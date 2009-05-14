@@ -1,9 +1,11 @@
 import logging
 
+from google.appengine.api import users
+
 from base import BaseRequestHandler
-from models import Vendor
+from models import User, Vendor
 from forms import UserForm
-from utils import exists_by_property
+from utils import exists_by_property, get1_by_property
 
 
 class UserAddPage(BaseRequestHandler):
@@ -22,6 +24,7 @@ class UserAddPage(BaseRequestHandler):
 
       # TODO: to avoid convert to list
       if not exists_by_property(User, 'name', user.name):
+        user.who = users.get_current_user()
         user.put()
         self.redirect('/u/%s/profile' % user.name)
       else:
@@ -32,7 +35,10 @@ class UserAddPage(BaseRequestHandler):
 
 class UserProfilePage(BaseRequestHandler):
   def get(self, username):
-    user = get1_by_property(User, 'name', username)
+    if username == 'mine':
+      user = User.get_current_user()
+    else:
+      user = get1_by_property(User, 'name', username)
     
     if user:
       self.generate('user_profile.html',
