@@ -15,7 +15,7 @@ class GroupAddPage(BaseRequestHandler):
   def _populate(self):
     leader = User.user(self.request.POST['leader'])
     group = Group(name=self.request.POST['name'],
-                  leader=leader.who)
+                  leader=leader)
 
     return group
     

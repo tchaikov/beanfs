@@ -2,6 +2,7 @@ import logging
 
 from google.appengine.api import users
 from google.appengine.ext import db
+from django.utils import simplejson
 
 from base import BaseRequestHandler
 from models import Vendor, User, Group
@@ -56,3 +57,13 @@ class UserProfilePage(BaseRequestHandler):
     # TODO: display check boxes presenting different groups,
     #       allowing user to join multiple groups
     pass
+
+class CheckAvailability(BaseRequestHandler):
+  def get(self):
+    username = self.request.get("username")
+    is_validate = not exists_by_property(User, 'name', username)
+    content = simplejson.dumps({'is_available':is_validate})
+    self.response.headers['Content-Type'] = "application/json"
+    self.response.out.write(content)
+    self.response.out.write("\n")
+

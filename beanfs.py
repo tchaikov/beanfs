@@ -20,6 +20,7 @@ application = webapp.WSGIApplication([
   (r'/', main.MainPage),
   (r'/u/(?P<username>.*)/profile', user.UserProfilePage),
   (r'/u/register', user.UserAddPage),        # TODO: need a complete impl of registration
+  (r'/u/check-username', user.CheckAvailability),
   (r'/v/all', vendor.VendorListPage),          # will be replaced with the main page
   (r'/v/entry', vendor.VendorAddPage),
   (r'/v/(?P<vendor>.*)/item/list', item.ItemListPage),
