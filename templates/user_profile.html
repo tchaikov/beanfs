@@ -23,7 +23,7 @@ Ongoing events:
     <li> {{group.name}} 
       <ul>
 	{% for event in group.get_open_events %}
-	<li><a href="/e/{{ event.key }}/purchase">{{event.vendor.name}}</a></li>
+	<li><a href="/e/{{ event.key.id }}/purchase">{{event.vendor.name}}</a></li>
 	{% endfor %}
       </ul>
     </li>

@@ -33,6 +33,7 @@ application = webapp.WSGIApplication([
   (r'/g/list', group.GroupListPage),
   (r'/oops/(?P<error>.*)', base.ErrorPage),
   (r'/e/(?P<event>.*)/purchase', purchase.PurchasePage),
+  (r'/e/(?P<event>.*)/entry', purchase.PurchasePage),
   (r'/e/entry', event.AddPage),
   (r'/(image)/(\d+)', image.ImagePage),
   (r'/(thumb)/(\d+)', image.ImagePage),

@@ -4,7 +4,7 @@ from google.appengine.api import images
 
 from base import BaseRequestHandler
 from utils import get1_by_property
-from models import Vendor, Photo
+from models import Vendor, Photo, Event
 from forms import ItemForm
 
 
@@ -17,9 +17,13 @@ class ItemListPage(BaseRequestHandler):
       self.redirect('/v/entry?vendor=%s' % vendor_name )
       return
     items = list(vendor.get_items())
-    logging.debug('%d items listed' % len(items))
+    event = Event.get_by_id(long(self.request.get("event")))
+    if not event:
+      self.error(404)
+      return
     self.generate('list_item.html',
-                  {'items':items,})
+                  {'items':items,
+                   'event':event})
 
 class ItemAddPage(BaseRequestHandler):
   def get(self, vendor_name):
