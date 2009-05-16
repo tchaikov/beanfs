@@ -20,7 +20,7 @@ class AddPage(BaseRequestHandler):
                     advocate = users.get_current_user())
       
       event.put()
-      
+      self.redirect('/u/mine/profile')
       
 class AddPurchase(BaseRequestHandler):
     def post(self):

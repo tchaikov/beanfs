@@ -5,7 +5,7 @@ from google.appengine.ext import db
 from django.utils import simplejson
 
 from base import BaseRequestHandler
-from models import Vendor, User, Group
+from models import Vendor, User, Group, Event
 from forms import UserForm
 from utils import exists_by_property, get1_by_property
 
@@ -29,8 +29,9 @@ class UserAddPage(BaseRequestHandler):
 
       if not exists_by_property(User, 'name', user.name):
         user.who = users.get_current_user()
-        user.groups = [db.Key(k) for k in self.request.POST.getall('group')]
         user.put()
+        for group in self.request.POST.getall('group'):
+          user.join(Group.get(group))
         self.redirect('/u/%s/profile' % user.name)
       else:
         logging.debug('user %s already exists!' % user.name)
@@ -49,6 +50,7 @@ class UserProfilePage(BaseRequestHandler):
     if user:
       self.generate('user_profile.html',
                     {'user':user,
+                     'groups':Group.all(),
                      'vendors':Vendor.all()})    
     else:
       self.redirect('/oops/invalid_user')

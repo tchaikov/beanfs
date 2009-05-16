@@ -3,7 +3,7 @@ import logging
 from django.utils import simplejson
 
 from base import BaseRequestHandler
-from models import Purchase, Vendor
+from models import Purchase, Vendor, Event
 from utils import exists_by_property
 
 class PurchasePage(BaseRequestHandler):
@@ -16,6 +16,7 @@ class PurchasePage(BaseRequestHandler):
       self.error(404)
       return
     vendors = list(Vendor.all())
+   
     self.generate('order.html',
                   {'vendors':vendors,
                    'event':event,

@@ -16,11 +16,16 @@ class User(db.Model):
     #phone = db.PhoneNumberProperty(required=True)
     name = db.StringProperty(required=True)
     who = db.UserProperty()
-    groups = db.ListProperty(db.Key)
 
-    def get_groups(self):
-        return Group.get(self.groups)
-    
+    @property
+    def groups(self):
+        return Group.gql("WHERE members = :me", me = self.key())
+
+    def join(self, group):
+        if group is None:
+            return
+        group.members.append(self.key())
+        
     @staticmethod
     def user(name):
         """Get google user by name"""
@@ -35,7 +40,7 @@ class User(db.Model):
     def get_groups_of_current_user():
         user = User.get_current_user()
         if user:
-            return user.get_groups()
+            return user.groups
         else:
             return []
     
@@ -43,12 +48,22 @@ class Group(db.Model):
     name = db.StringProperty(required=True)
     members = db.ListProperty(db.Key)
     leader = db.UserProperty()
+
+    def __contains__(self, user):
+        if user is not None:
+            return user.key() in self.members
+        return False
+    
     def get_members(self):
         return User.get(self.members)
 
     def get_open_events(self):
         return db.Query(Event).filter('group = ', self).filter('is_open = ', True)
     
+    def has_current_user(self):
+        current_user = User.get_current_user()
+        return current_user in self
+
 class Photo(db.Model):
     image = db.BlobProperty(default=None)
     thumb = db.BlobProperty(default=None)
@@ -67,7 +82,11 @@ class Vendor(db.Model):
     items = db.ListProperty(db.Key)
     comment = db.TextProperty()
     hit = db.IntegerProperty(default=0)
-        
+
+    def __eq__(self, other):
+        return self.name == other.name and \
+               self.phone == other.phone
+    
     def get_items(self):
         items = Item.get(self.items)
         return items

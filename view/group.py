@@ -54,7 +54,7 @@ class GroupProfilePage(BaseRequestHandler):
     if not user:
       self.redirect('/oops/invalid_user')
     else:
-      group.members.append(user.key())
+      user.join(group)
       group.put()
       self.redirect('/g/%s/profile' % group.name)
     

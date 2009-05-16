@@ -4,26 +4,37 @@
 {% block body %}
 
 <div id="user">
-  {{user.group.name}} | {{ user.name }} | {{ user.balance }} | {{ user.phone }} | {{ user.who }}
+  {{ user.name }} | {{ user.balance }} | {{ user.who }}
+</div>
+
+Your groups:
+<div class="groups">
+  <form action="/u/join" name="join_group" method="post">
+  {% for group in groups %}
+  {{group.name}}<input type="checkbox" name="group" value="{{group.key.id}}" {% if group.has_current_user %} checked="checked" {% endif %} /> <br />
+  {% endfor %}
+  </form>
 </div>
 
 Ongoing events:
-<ul>
-  {% for group in user.get_groups %}
-  <li> {{group.name}} 
-    <ul>
-      {% for event in group.get_open_events %}
-      <li><a href="/e/{{ event.key }}/purchase">{{event.vendor.name}}</a></li>
-      {% endfor %}
-    </ul>
-  </li>
-  {% endfor %}
-</ul>
+<div class="events">
+  <ul>
+    {% for group in user.groups %}
+    <li> {{group.name}} 
+      <ul>
+	{% for event in group.get_open_events %}
+	<li><a href="/e/{{ event.key }}/purchase">{{event.vendor.name}}</a></li>
+	{% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 
 Create an event:
 <form action="/e/entry" name="new_event" method="post">
   <select name="group">
-    {% for group in user.get_groups %}
+    {% for group in groups %}
     <option value="{{ group.key }}">{{ group.name }}</option>
     {% endfor %}
   </select>

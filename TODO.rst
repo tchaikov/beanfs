@@ -2,6 +2,7 @@
 functionality
 =============
 * notify user to order meal at noon using IM or email
+* add a 404 page
 
 UI
 ===
@@ -12,9 +13,9 @@ UI
 
 restructure
 ===========
-* separate beanfs.py into views.py and main.py
 * use a customized jquery ui with minimum set of functionality (so far tab only)
-
+* replace the User in group with google user, we will have User as the Account, and google user will be the connection key in these tables
+* try to remove all trace of google db from view and control
 
 Misc
 ====

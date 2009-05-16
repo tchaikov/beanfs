@@ -1,7 +1,7 @@
 from django.utils import simplejson
 
 from base import BaseRequestHandler
-from models import Vendor, Group
+from models import Vendor, Group, Event
 
 class PurchaseListPage(BaseRequestHandler):
   """list all orders of current user

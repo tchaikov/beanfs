@@ -17,7 +17,7 @@ def get1_by_property(model, prop, value):
         assert 0, "%s has multiple records with %s=%s\n" % (model, prop, value)
 
 
-def find(pred, seq, ret=None):
+def find_if(seq, pred, ret=None):
     """
     Return first item in sequence where pred(item) is True.
     """
@@ -25,4 +25,4 @@ def find(pred, seq, ret=None):
         if pred(item):
             return item
 
-    
+    return ret
