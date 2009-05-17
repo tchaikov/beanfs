@@ -101,7 +101,6 @@ class Event(db.Model):
     def purchases(self):
         return db.Query(Purchase).filter('event = ', self)
         
-
 class Purchase(db.Model):
     customer = db.UserProperty(required=True)
     item = db.ReferenceProperty(Item)
@@ -125,7 +124,6 @@ class Purchase(db.Model):
         return chain(Purchase.get_purchase_of_user(m) \
                      for m in group.get_members())
             
-
 class Order(db.Model):
     contact = db.UserProperty(required=True)
     vendor = db.ReferenceProperty(Vendor)

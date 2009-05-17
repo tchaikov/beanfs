@@ -28,8 +28,7 @@ class OrderAddPage(BaseRequestHandler):
   """collect all purchases in an event, and call the vendor.
   """
   def get(self, event_key):
-    """collect all new purchases in a group indicated by `group_key`
-    TODO: maybe we need send a JSON repsentation to the client?
+    """collect new purchase of event whose key is `event_key'
     """
     event = Event.get(event_key)
     if not event:
@@ -38,13 +37,18 @@ class OrderAddPage(BaseRequestHandler):
                   {'vendor':event.vendor,
                    'purchases':event.purchases})
     
-  def post(self, event_key):
+  def post(self, event_id):
     """save the new order into db
+
+    all items in the event have been confirmed by the contact person.. we need:
+    - close the current event
+    - create a new order
     """
-    event = Event.get(event_key)
+    event = Event.get_by_id(event_id)
     if not event:
       self.error(404)
-
+      return
+    event.is_open = False
     json = self.request.get('json')
     json = simplejson.loads(json)
     purchases = []
@@ -57,7 +61,11 @@ class OrderAddPage(BaseRequestHandler):
                   vendor=event.vendor,
                   purchases=purchases)
     order.put()
-
+    event.put()
+    
 class OrderPayPage(BaseRequestHandler):
-  pass
+  """
+  """
+  def get(self, event_id):
+    pass
 

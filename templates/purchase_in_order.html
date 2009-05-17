@@ -18,10 +18,11 @@
     <tbody>
       {% for purchase in purchases %}
       <tr>
-        <td>{{purchase.customer.name}}</td>        
+        <td>{{purchase.customer.nickname}}</td>        
         <td>{{purchase.item.name}}</td>
 	<td>{{purchase.item.price}}</td>
       </tr>
       {% endfor %}
     </tbody>
+  </table>
 {% endblock %}
