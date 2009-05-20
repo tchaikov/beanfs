@@ -43,6 +43,16 @@ var remote_submit_json = function(form, func, disable, action) {
     });
 }
 
+var submit_purchase_json = function(url, purchases, func) {
+    return $.ajax({
+        type: "POST",
+        url: url,
+        data: purchases,
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: func
+    });
+};
 
 var init_purchase_form = function(form) {
     var btns = {}, selected = {};
@@ -73,8 +83,16 @@ var init_purchase_form = function(form) {
     
     //update();
     $(form).submit(function() {
-        var sid = $(this).attr('action').split('/')[3];
-        remote_submit_json(this, function(data) {
+        var purchases = [];
+        for (var item in selected) {
+            var purchase = {"item":item,
+                            "fallbacks":[],
+                            "policy":"any"};
+            purchases.push(purchase);
+        }
+	// XXX, replace it with a light-weight solution
+	data = JSON.stringify(purchases);
+        submit_purchase_json(this.action, data, function(data) {
             window.location.href = window.location.href.replace('entry', 'list');
         });
         return false;
@@ -96,7 +114,7 @@ var init_purchase_form = function(form) {
         });
         if (!present) { tags.push(tag); select(tl); }
         var content = tags.join(' ');
-	form.tags.value = (content.length > 1) ? content+' ' : content; 
+        form.tags.value = (content.length > 1) ? content+' ' : content; 
         form.tags.focus();
     });
 }

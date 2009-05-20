@@ -28,5 +28,5 @@ class PurchasePage(BaseRequestHandler):
     event = Event.get_by_id(long(id))
     if not event:
       self.error(404)
-    logging.debug("posting to event: %s %s" % (event.vendor.name, event.advocate.nickname()))
-    
+    logging.debug("posting to event: %s %s: %r" % (event.vendor.name, event.advocate.nickname(), self.request.body))
+    json = simplejson.loads(self.request.body)

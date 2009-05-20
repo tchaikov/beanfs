@@ -1,3 +1,11 @@
+    <script type="text/javascript">
+      $("#purchase_form").ready(function() {
+        $('#purchase_form').each(function(i) {
+          init_purchase_form(this);
+        });
+      });
+    </script>
+
 <form id="purchase_form" method="post" action="/e/{{event.key.id}}/entry">
   <table>
   <input type="text" style="width: 250px;" name="tags" />
