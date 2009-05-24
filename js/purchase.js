@@ -94,6 +94,7 @@ var init_purchase_form = function(form) {
 	data = JSON.stringify(purchases);
         submit_purchase_json(this.action, data, function(data) {
             window.location.href = window.location.href.replace('entry', 'list');
+	    return false;
         });
         return false;
     });

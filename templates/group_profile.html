@@ -16,7 +16,7 @@
 
       <tr>
         <td><label for="id_leader">Leader:</label></td>
-        <td>{%if group.leader %} {{group.leader}} {%endif %}</td>
+        <td>{% if group.leader %} {{group.leader}} {%endif %}</td>
       </tr>
       
      {% for member in group.members %}

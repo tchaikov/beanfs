@@ -1,0 +1,21 @@
+    <div id="purchases">
+      <table>
+	<thead>
+	  <th>customer</th>
+	  <th>item</th>
+	  <th>price</th>
+	  <th>notes</th>
+	</thead>
+	<tbody>
+	  {% for p in purchases %}
+	  <tr class="{% cycle a,b %}">
+	    <td>{{ p.customer.nickname }} </td>
+	    <td>{{ p.item.name }} </td>
+	    <td>{{ p.item.price }} </td>
+	    <td>{{ p.notes|striptags|escape|linebreaks }} </td>
+	  </tr>
+	  {% endfor %}
+	</tbody>
+      </table>
+    </div>
+

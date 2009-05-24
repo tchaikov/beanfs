@@ -1,7 +1,7 @@
 from django.utils import simplejson
 
 from base import BaseRequestHandler
-from models import Vendor, Group, Event
+from models import User, Vendor, Group, Event, Order
 
 class PurchaseListPage(BaseRequestHandler):
   """list all orders of current user
@@ -19,7 +19,7 @@ class OrderListPage(BaseRequestHandler):
       order = Order().get(key)
       if order is None:
           self.error(404)
-      purchases = order.get_purchases()
+      confirmed_items = order.items
       self.generate('purchase_in_order.html',
                     {'order':order,
                      'purchases':purchases})
@@ -64,8 +64,25 @@ class OrderAddPage(BaseRequestHandler):
     event.put()
     
 class OrderPayPage(BaseRequestHandler):
+  """the payer will see this page
   """
-  """
-  def get(self, event_id):
-    pass
+  def get(self, order_id):
+    order = Order.get_by_id(long(order_id))
+    if order is None:
+      self.error(404)
+      return
+    purchases = order.get_purchases()
+    self.generate('pay.html',
+                  {'order':order,
+                   'purchases':purchases})
 
+  def post(self, order_id):
+    order = Order.get_by_id(long(order_id))
+    if order is None:
+      self.error(404)
+      return
+    purchases = order.get_purchases()
+    current_user = User.get_current_user()
+    for p in purchases:
+      current_user.pay_for(p.customer, p.item.price)
+    self.redirect('/u/mine/profile')

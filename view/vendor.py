@@ -22,11 +22,10 @@ class VendorAddPage(BaseRequestHandler):
 
   def post(self):
     data = VendorForm(data=self.request.POST)
-    vendor_name = self.request.POST.get('name')
+    vendor_name = self.request.get('name')
     if data.is_valid() and not exists_by_property(Vendor, 'name', vendor_name):
       vendor = data.save(commit=False)
       vendor.put()
       self.redirect('/v/all')
     else:
       self.redirect('/v/entry')
-

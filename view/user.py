@@ -56,8 +56,7 @@ class UserProfilePage(BaseRequestHandler):
       self.redirect('/oops/invalid_user')
 
   def post(self, username):
-    # TODO: display check boxes presenting different groups,
-    #       allowing user to join multiple groups
+    # TODO
     pass
 
 class CheckAvailability(BaseRequestHandler):

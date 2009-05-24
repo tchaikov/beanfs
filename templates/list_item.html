@@ -1,10 +1,10 @@
-    <script type="text/javascript">
-      $("#purchase_form").ready(function() {
-        $('#purchase_form').each(function(i) {
+<script type="text/javascript">
+  $("#purchase_form").ready(function() {
+      $('#purchase_form').each(function(i) {
           init_purchase_form(this);
-        });
       });
-    </script>
+  });
+</script>
 
 <form id="purchase_form" method="post" action="/e/{{event.key.id}}/entry">
   <table>
@@ -30,4 +30,3 @@
   </div>
   </table>
 </form>
-

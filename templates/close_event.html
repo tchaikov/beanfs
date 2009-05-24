@@ -1,0 +1,13 @@
+  {% extends "base.html" %}
+  {% block head %}
+  {% endblock %}
+  {% block body %}
+    <h2>{{ event.vendor.name }}</h2>
+    <h2>{{ event.vendor.phone }}</h2>
+    <p>{{ event.vendor.comment|escape|linebreaks }}</p>
+    <form action="#" method="post">
+    {% include 'includes/list_purchase.html' %}
+    <input name="submit" type="submit" value="deal" />
+    <input type="button" value="cancel" onClick="document.location.href = '/u/mine/profile';" />
+    </form>
+  {% endblock %}

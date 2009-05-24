@@ -34,6 +34,8 @@ application = webapp.WSGIApplication([
   (r'/oops/(?P<error>.*)', base.ErrorPage),
   (r'/e/(?P<event>.*)/purchase', purchase.PurchasePage),
   (r'/e/(?P<event>.*)/entry', purchase.PurchasePage),
+  (r'/e/(?P<event>.*)/list', purchase.EventList),
+  (r'/e/(?P<event>.*)/close', purchase.EventClose),
   (r'/e/entry', event.AddPage),
   (r'/(image)/(\d+)', image.ImagePage),
   (r'/(thumb)/(\d+)', image.ImagePage),

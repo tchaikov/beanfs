@@ -1,0 +1,14 @@
+  {% extends "base.html" %}
+  {% block head %}
+  {% endblock %}
+  {% block body %}
+    {% include 'includes/list_purchase.html' %}
+    {% if event.order %}
+    <p>
+      Have called {{ event.vendor.name }} for this deal. Now waiting for items' arrival.
+    </p>
+    <form method="get" action="/o/{{ event.order.key.id }}/pay">
+      <input type="submit" value="I paid for it." />
+    </form>
+    {% endif %}
+  {% endblock %}

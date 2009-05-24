@@ -13,10 +13,10 @@ class AddPage(BaseRequestHandler):
   """
   def post(self):
       # TODO: sanity test
-      group = self.request.POST['group']
-      vendor = self.request.POST['vendor']
-      event = Event(group = Group.get(group),
-                    vendor = Vendor.get(vendor),
+      group = self.request.get('group')
+      vendor = self.request.get('vendor')
+      event = Event(group = Group.get_by_id(long(group)),
+                    vendor = Vendor.get_by_id(long(vendor)),
                     advocate = users.get_current_user())
       
       event.put()

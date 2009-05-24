@@ -1,1 +1,20 @@
 .login { text-align:right;}
+#purchases table {
+    margin-left: 20px;
+    margin-right: 20px;
+    border: thin solid black;
+    rules: groups;
+}
+
+#purchases td, th {
+    border: thin solid gray;
+    padding: 5px;
+}
+
+tr.a {
+    background-color:#FFFFFF;
+}
+
+tr.b {
+    background-color:#E0FFB8;
+}
