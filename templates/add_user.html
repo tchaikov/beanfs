@@ -2,6 +2,7 @@
 {% block title %}Adding new dish{% endblock %}
 {% block body %}
 <script language="javascript">
+//<![CDATA[
 $(document).ready(function () {
   $("#id_name").blur(function () {
     $.ajax({
@@ -26,7 +27,7 @@ $(document).ready(function () {
     });
   });
 })
-
+//]]>
 </script>
 
 <form action="/u/register" method="post">

@@ -15,11 +15,11 @@ class OrderListPage(BaseRequestHandler):
   """
   Show all purchases in an order.
   """
-  def get(self, key):
-      order = Order().get(key)
+  def get(self, id):
+      order = Order.get_by_id(id)
       if order is None:
           self.error(404)
-      confirmed_items = order.items
+      purchases = order.get_purchases()
       self.generate('purchase_in_order.html',
                     {'order':order,
                      'purchases':purchases})
@@ -81,6 +81,7 @@ class OrderPayPage(BaseRequestHandler):
     if order is None:
       self.error(404)
       return
+    # TODO: `purchaese' should be the received json object
     purchases = order.get_purchases()
     current_user = User.get_current_user()
     for p in purchases:

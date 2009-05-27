@@ -3,6 +3,7 @@
 # Copyright 2009 Kov Chai <tchaikov@gmail.com>
 #
 
+from itertools import chain
 import logging
 from google.appengine.api import users
 from google.appengine.ext import db
@@ -26,7 +27,7 @@ class MutualBalance(db.Model):
         if balance:
             return balance
         else:
-            return MutualBalance(from_user=from_user, to_user=to_user)
+            return MutualBalance(from_user=from_user, to_user=to_user, amount=0.0)
             
 class User(db.Model):
     balance = db.FloatProperty(required=True, default=0.0)
@@ -44,13 +45,21 @@ class User(db.Model):
         group.members.append(self.key())
 
     def pay_for(self, other, amount):
-        """
+        """adjust the balance of self and other
 
         other: an users.User
         """
         if self.who == other:
             self.balance += amount
-        
+
+    def get_balances(self):
+        """ get all non-zero mutual balances 
+        """
+        non_zero_balances = db.Query(MutualBalance).filter("amount > 0")
+        my_balances = chain(non_zero_balances.filter("from_user = ", self.who),
+                            non_zero_balances.filter("to_user = ", self.who))
+        return my_balances
+    
     @staticmethod
     def user(name):
         """Get google user by name"""

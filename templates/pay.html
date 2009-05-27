@@ -2,8 +2,9 @@
   {% block head %}
   {% endblock %}
   {% block body %}
+    Following are the items in this order. Modify the list if it does not reflect the dishes we have.
     {% include 'includes/list_purchase.html' %}
     <form method="post" action="#">
-      <input type="submit" value="I paid for it." />
+      <input type="submit" value="done" />
     </form>
   {% endblock %}
