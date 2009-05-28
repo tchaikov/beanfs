@@ -28,7 +28,8 @@ class MutualBalance(db.Model):
             return balance
         else:
             return MutualBalance(from_user=from_user, to_user=to_user, amount=0.0)
-            
+
+   
 class User(db.Model):
     balance = db.FloatProperty(required=True, default=0.0)
     #phone = db.PhoneNumberProperty(required=True)
@@ -51,15 +52,16 @@ class User(db.Model):
         """
         if self.who == other:
             self.balance += amount
-
+            
     def get_balances(self):
         """ get all non-zero mutual balances 
         """
-        non_zero_balances = db.Query(MutualBalance).filter("amount > 0")
-        my_balances = chain(non_zero_balances.filter("from_user = ", self.who),
-                            non_zero_balances.filter("to_user = ", self.who))
+        user = self.who
+        non_zero_balances = db.Query(MutualBalance).filter('amount > ', 0)
+        my_balances = chain(non_zero_balances.filter('from_user = ', user),
+                        non_zero_balances.filter('to_user = ', user))
         return my_balances
-    
+ 
     @staticmethod
     def user(name):
         """Get google user by name"""

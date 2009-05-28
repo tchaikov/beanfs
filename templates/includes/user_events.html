@@ -1,0 +1,40 @@
+Ongoing events:
+<div class="events">
+  <ul>
+    {% for group in user.groups %}
+    <li> {{group.name}} 
+      <ul>
+	<form>
+	  {% for event in group.get_all_events %}
+	  <li>
+	    <span>{{event.vendor.name}}</span>
+	    {% if event.is_open %}
+	    <button type="button" onClick="location.replace('/e/{{ event.key.id }}/purchase')">join it</button>
+	    <button type="button" onClick="location.replace('/e/{{ event.key.id }}/close')">close it</button>
+	    {% else %}
+	    <button type="button" onClick="location.replace('/e/{{ event.key.id }}/list')">check it</button>
+	    {% endif %}
+	  </li>
+	  {% endfor %}
+	</form>
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+Create an event:
+<form action="/e/entry" name="new_event" method="post">
+  <select name="group">
+    {% for group in groups %}
+    <option value="{{ group.key.id }}">{{ group.name }}</option>
+    {% endfor %}
+  </select>
+  <select name="vendor">
+    {% for vendor in vendors %}
+    <option value="{{ vendor.key.id }}">{{ vendor.name }}</option>
+    {% endfor %}
+  </select>
+
+  <input name="submit" type="submit" value="Create"/>
+</form>

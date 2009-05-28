@@ -5,6 +5,7 @@ from google.appengine.ext import db
 from django.utils import simplejson
 
 from base import BaseRequestHandler
+from control import balance
 from models import Vendor, User, Group, Event
 from forms import UserForm
 from utils import exists_by_property, get1_by_property
@@ -41,6 +42,13 @@ class UserAddPage(BaseRequestHandler):
       
 
 class UserProfilePage(BaseRequestHandler):
+  def get_balances(self, user):
+    user_balance = balance.UserBalance(user)
+    balances, total_amount, max_amount = user_balance.get_balances()
+    total = balance.Balance(amount=total_amount, name="Total", max_amount=max_amount)
+    balances.append(total)
+    return balances
+  
   def get(self, username):
     if username == 'mine':
       user = User.get_current_user()
@@ -48,8 +56,10 @@ class UserProfilePage(BaseRequestHandler):
       user = get1_by_property(User, 'name', username)
     
     if user:
+      balances = self.get_balances(user)
       self.generate('user_profile.html',
                     {'user':user,
+                     'balances':balances,
                      'groups':Group.all(),
                      'vendors':Vendor.all()})    
     else:

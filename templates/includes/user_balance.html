@@ -1,0 +1,39 @@
+<div id="balances">
+  <table cellspacing="0" cellpadding="0" width = "100%">
+    <thead>
+      <tr class="colHeader">
+	<td style="text-align: left; padding-right: 0.5em;">name</td>
+	<td style="padding-right: 1em;">balance</td>
+	<td colspan="2" style="text-align: center;" />
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in balances %}
+      <tr>
+	<td style="text-align: left; padding-right: 0.5em;">{{ b.name }}</td>
+	<td style="width: 20%; padding-right: 1em;"><span class="ownsMe">{{ b.amount }}</span></td>
+	<td style="width: 38%;">
+	  <table class="bars" cellspacing="0" cellpadding="0" width="100%">
+	    <tbody>
+	      <tr style="height: 0.9em;">
+		<td style="background-color: rgb(255,255,255); width:{{ b.own.percent }}%;"/>
+		<td class="greenLight" title="this guy own you a lot" style="border-right: 1px solid rgb(204,179,171); width: {{ b.own.comp_percent }}%;"/>
+	      </tr>
+	    </tbody>
+	  </table>
+	  </td>
+	<td style="width: 38%;">
+	  <table class="bars" cellspacing="0" cellpadding="0" width="100">
+	    <tbody>
+	      <tr style="height: 0.9em;">
+		<td class="redLight" title="you own this guy a lot" style="width: {{ b.lend.percent }}%;"/>
+		<td style="background-color: rgb(255,255,255); width: {{ b.lend.comp_percent }}%;"/>
+	      </tr>
+	    </tbody>
+	  </table>
+	</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

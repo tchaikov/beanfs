@@ -1,0 +1,30 @@
+#balance .bars td {
+    margin:0;
+    padding:0;
+}
+
+#balance td {
+    padding:2px 0 1px;
+    text-align:right;
+    white-space:nowrap;
+}
+
+.greenLight {
+    background-color:#ACF4AC;
+}
+
+.redLight {
+    background-color:#FFCEBE;
+}
+
+table {
+    border-collapse:collapse;
+    empty-cells:show;
+    font-size: 1em;
+}
+
+thead, tbody, tfoot, tr, th, td {
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+}
