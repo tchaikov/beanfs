@@ -1,6 +1,8 @@
 import logging
 
+from google.appengine.api import users
 from models import User, MutualBalance
+from utils import get1_by_property
 
 class Percentage:
     def __init__(self, percent):
@@ -50,13 +52,13 @@ class Balance:
             return Percentage(0.0)
         
 class UserBalance:
-    def __init__(self, user):
+    def __init__(self, user = users.get_current_user()):
         self.user = user
                 
     def get_balances(self):
-        user = self.user.get_balances()
-        bs = [Balance.create_from_mutual_balance(b, self.user.who) \
-              for b in self.user.get_balances()]
+        user = get1_by_property(User, 'who', self.user)
+        bs = [Balance.create_from_mutual_balance(b, self.user) \
+              for b in user.get_balances()]
         if not bs:
             return bs, 0, 0
         amount_list = [b.amount for b in bs]
@@ -66,3 +68,17 @@ class UserBalance:
             b.normalize(max_amount)
         return bs, total_amount, max_amount
 
+    def pay_for(self, other, amount):
+        """adjust the balance of self and other
+
+        other: an users.User
+        """
+        me = self.user
+        balance = MutualBalance.get_balance(me, other)
+        if balance.from_user == me:
+            balance.amount += amount
+        else:
+            balance.amount -= amount
+        balance.put()
+        
+            

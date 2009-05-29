@@ -28,12 +28,18 @@ class PurchasePage(BaseRequestHandler):
     TODO: accept multiple json objects which present purchases.
     """
     event_id = long(id)
-    jsons = simplejson.loads(self.request.body)
-    purchases = [Purchase.create_from_json(event_id, json) for json in jsons]
-    for purchase in purchases:
-      purchase.put()
-    self.redirect('/e/%s/list' % id)
-    return
+    response = {}
+    try:
+      jsons = simplejson.loads(self.request.body)
+      purchases = [Purchase.create_from_json(event_id, json) for json in jsons]
+      for purchase in purchases:
+        purchase.put()
+      response = {'status': 'success',
+                  'redirect': '/e/%d/list' % event_id,
+                  'n_purchase':len(purchases)}
+    except Exception, e:
+      response = {'status': str(e), 'n_purchase':0}
+    simplejson.dump(response, self.response.out)
 
 class EventList(BaseRequestHandler):
   def get(self, event_id):

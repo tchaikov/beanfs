@@ -43,7 +43,7 @@ class UserAddPage(BaseRequestHandler):
 
 class UserProfilePage(BaseRequestHandler):
   def get_balances(self, user):
-    user_balance = balance.UserBalance(user)
+    user_balance = balance.UserBalance(user.who)
     balances, total_amount, max_amount = user_balance.get_balances()
     total = balance.Balance(amount=total_amount, name="Total", max_amount=max_amount)
     balances.append(total)

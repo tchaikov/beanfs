@@ -45,14 +45,6 @@ class User(db.Model):
             return
         group.members.append(self.key())
 
-    def pay_for(self, other, amount):
-        """adjust the balance of self and other
-
-        other: an users.User
-        """
-        if self.who == other:
-            self.balance += amount
-            
     def get_balances(self):
         """ get all non-zero mutual balances 
         """

@@ -83,7 +83,7 @@ class OrderPayPage(BaseRequestHandler):
       return
     # TODO: `purchaese' should be the received json object
     purchases = order.get_purchases()
-    current_user = User.get_current_user()
+    balance = balance.UserBalance()
     for p in purchases:
-      current_user.pay_for(p.customer, p.item.price)
+      balance.pay_for(p.customer, p.item.price)
     self.redirect('/u/mine/profile')
