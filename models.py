@@ -23,7 +23,7 @@ class MutualBalance(db.Model):
         if from_user.user_id() > to_user.user_id():
             from_user, to_user = to_user, from_user
         balance = MutualBalance.gql("WHERE from_user = :from_user AND to_user = :to_user",
-                                    from_user=from_user, to_user=to_user)
+                                    from_user=from_user, to_user=to_user).get()
         if balance:
             return balance
         else:
@@ -49,9 +49,9 @@ class User(db.Model):
         """ get all non-zero mutual balances 
         """
         user = self.who
-        non_zero_balances = db.Query(MutualBalance).filter('amount > ', 0)
-        my_balances = chain(non_zero_balances.filter('from_user = ', user),
-                        non_zero_balances.filter('to_user = ', user))
+        my_balances = chain(MutualBalance.gql('WHERE to_user = :1 AND from_user = :1', user),
+                            MutualBalance.gql('WHERE to_user != :1 AND from_user = :1', user),
+                            MutualBalance.gql('WHERE to_user = :1 AND from_user != :1', user))
         return my_balances
  
     @staticmethod

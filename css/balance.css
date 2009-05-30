@@ -1,3 +1,11 @@
+#balances table {
+    border:1px solid #3366CC;
+    border-collapse:collapse;
+    border-spacing:0;
+    clear:right;
+    margin:1em 0 0 1px;
+}
+
 #balance .bars td {
     margin:0;
     padding:0;
@@ -9,11 +17,11 @@
     white-space:nowrap;
 }
 
-.greenLight {
+.glight {
     background-color:#ACF4AC;
 }
 
-.redLight {
+.rlight {
     background-color:#FFCEBE;
 }
 
