@@ -4,6 +4,18 @@
     border-spacing:0;
     clear:right;
     margin:1em 0 0 1px;
+    empty-cells:show;
+    font-size: 1em;
+}
+
+#balances td, #balances th {
+    border-bottom:1px solid #BBBBBB;
+}
+
+#balances thead, tbody, tfoot, tr, th, td {
+    border: 0 none;
+    margin: 0;
+    padding: 0;
 }
 
 #balance .bars td {
@@ -23,16 +35,4 @@
 
 .rlight {
     background-color:#FFCEBE;
-}
-
-table {
-    border-collapse:collapse;
-    empty-cells:show;
-    font-size: 1em;
-}
-
-thead, tbody, tfoot, tr, th, td {
-    border: 0 none;
-    margin: 0;
-    padding: 0;
 }

@@ -49,7 +49,7 @@ class OrderAddPage(BaseRequestHandler):
     if not event:
       self.error(404)
       return
-    event.is_open = False
+    event.status = 'ordered'
     json = self.request.get('json')
     json = simplejson.loads(json)
     purchases = []
