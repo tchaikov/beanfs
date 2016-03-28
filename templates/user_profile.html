@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
-<link type="text/css" href="css/balance.css" rel="stylesheet" />
+<link type="text/css" href="/css/balance.css" rel="stylesheet" />
 {% endblock %}
 {% block title %}Viewing user profile{% endblock %}
 
@@ -12,10 +12,11 @@
 
 Your groups:
 <div class="groups">
-  <form action="/u/join" name="join_group" method="post">
+  <form action="/u/{{ user.name }}/join" name="join_group" method="post">
   {% for group in groups %}
   {{group.name}}<input type="checkbox" name="group" value="{{group.key.id}}" {% if group.has_current_user %} checked="checked" {% endif %} /> <br />
   {% endfor %}
+  <input name="update_group" type="submit" value="Update my groups" />
   </form>
 </div>
 <h2>Balances</h2>

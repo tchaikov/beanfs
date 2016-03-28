@@ -1,0 +1,8 @@
+{% include 'includes/list_item.html' %}
+
+{% ifequal nitems 0 %}
+There is still no item in {{vendor.name}}, do you want to help add some? 
+<button type="button" onclick="location.replace('/v/{{vendor.name}}/item/entry')">Sure!</button>
+{% else %}
+<button type="button" onclick="location.replace('/v/{{vendor.name}}/item/entry')">Add another item</button>
+{% endifequal %}

@@ -19,6 +19,7 @@ webapp.template.register_template_library('filters')
 application = webapp.WSGIApplication([
   (r'/', main.MainPage),
   (r'/u/(?P<username>.*)/profile', user.UserProfilePage),
+  (r'/u/(?P<username>.*)/join', user.UserJoinPage),
   (r'/u/register', user.UserAddPage),        # TODO: need a complete impl of registration
   (r'/u/check-username', user.CheckAvailability),
   (r'/v/all', vendor.VendorListPage),          # will be replaced with the main page
@@ -35,6 +36,7 @@ application = webapp.WSGIApplication([
   (r'/e/(?P<event>.*)/purchase', purchase.PurchasePage),
   (r'/e/(?P<event>.*)/entry', purchase.PurchasePage),
   (r'/e/(?P<event>.*)/list', purchase.EventList),
+  (r'/e/(?P<event>.*)/pay', purchase.EventPay),
   (r'/e/(?P<event>.*)/close', purchase.EventClose),
   (r'/e/entry', event.AddPage),
   (r'/(image)/(\d+)', image.ImagePage),

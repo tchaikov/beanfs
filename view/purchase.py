@@ -28,12 +28,18 @@ class PurchasePage(BaseRequestHandler):
     TODO: accept multiple json objects which present purchases.
     """
     event_id = long(id)
-    jsons = simplejson.loads(self.request.body)
-    purchases = [Purchase.create_from_json(event_id, json) for json in jsons]
-    for purchase in purchases:
-      purchase.put()
-    self.redirect('/e/%s/list' % id)
-    return
+    response = {}
+    try:
+      jsons = simplejson.loads(self.request.body)
+      purchases = [Purchase.create_from_json(event_id, json) for json in jsons]
+      for purchase in purchases:
+        purchase.put()
+      response = {'status': 'success',
+                  'redirect': '/e/%d/list' % event_id,
+                  'n_purchase':len(purchases)}
+    except Exception, e:
+      response = {'status': str(e), 'n_purchase':0}
+    simplejson.dump(response, self.response.out)
 
 class EventList(BaseRequestHandler):
   def get(self, event_id):
@@ -45,7 +51,6 @@ class EventList(BaseRequestHandler):
     self.generate('list_purchase.html',
                   {'event':event,
                    'purchases':event.purchases})
-
 
 class EventClose(BaseRequestHandler):
   def get(self, event_id):
@@ -64,13 +69,16 @@ class EventClose(BaseRequestHandler):
     return event.purchases
   
   def post(self, event_id):
+    # 
+    # we've dialed the vendor for this order
+    # 
     event = Event.get_by_id(long(event_id))
     if event is None:
       self.error(404)
       return
     logging.debug("event close: %r" % self.request.body)
     # TODO: merge with order.OrderAddPage.post
-    event.is_open = False
+    event.status = 'ordered'
 
     purchases = self.get_purchase_from_json(event)
     for purchase in purchases:
@@ -83,3 +91,35 @@ class EventClose(BaseRequestHandler):
     event.order = order
     event.put()
     self.redirect('/u/mine/profile')
+    
+class EventPay(BaseRequestHandler):
+  """the payer will see this page
+  """
+  def get(self, event_id):
+    event = Event.get_by_id(long(event_id))
+    if event is None:
+      self.error(404)
+      return
+    order = event.order
+    purchases = order.get_purchases()
+    self.generate('pay.html',
+                  {'order':order,
+                   'purchases':purchases})
+
+  def post(self, event_id):
+    #
+    # we've paid for the purchased items
+    # 
+    event = Event.get_by_id(long(event_id))
+    if event is None:
+      self.error(404)
+      return
+    order = event.order
+    event.staus = 'paid'
+    # TODO: `purchaese' should be the received json object
+    purchases = order.get_purchases()
+    balance = UserBalance()
+    for p in purchases:
+      balance.pay_for(p.customer, p.item.price)
+    self.redirect('/u/mine/profile')
+

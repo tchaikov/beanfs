@@ -9,6 +9,7 @@ functionality
  - Purchase: item, fallbacks, notes
  - PurchaseEntry: customer, status, event, ReferenceProperty(Purchase)
 * what is in an Order should not be purchases but confirmed items
+* add a side bar or description for each item/page to explain the usage 
 
 UI
 ===

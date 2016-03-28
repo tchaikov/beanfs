@@ -2,6 +2,7 @@ from django.utils import simplejson
 
 from base import BaseRequestHandler
 from models import User, Vendor, Group, Event, Order
+from control.balance import UserBalance
 
 class PurchaseListPage(BaseRequestHandler):
   """list all orders of current user
@@ -48,7 +49,7 @@ class OrderAddPage(BaseRequestHandler):
     if not event:
       self.error(404)
       return
-    event.is_open = False
+    event.status = 'ordered'
     json = self.request.get('json')
     json = simplejson.loads(json)
     purchases = []
@@ -83,7 +84,7 @@ class OrderPayPage(BaseRequestHandler):
       return
     # TODO: `purchaese' should be the received json object
     purchases = order.get_purchases()
-    current_user = User.get_current_user()
+    balance = UserBalance()
     for p in purchases:
-      current_user.pay_for(p.customer, p.item.price)
+      balance.pay_for(p.customer, p.item.price)
     self.redirect('/u/mine/profile')

@@ -17,13 +17,19 @@ class ItemListPage(BaseRequestHandler):
       self.redirect('/v/entry?vendor=%s' % vendor_name )
       return
     items = list(vendor.get_items())
-    event = Event.get_by_id(long(self.request.get("event")))
-    if not event:
-      self.error(404)
-      return
-    self.generate('list_item.html',
-                  {'items':items,
-                   'event':event})
+    event_id = self.request.get("event")
+    if event_id:
+      event = Event.get_by_id(long(event_id))
+      self.generate('list_item.html',
+                    {'items':items,
+                     'event':event})
+    else:
+      self.generate('show_item.html',
+                    {'vendor':vendor,
+                     'items':items,
+                     'nitems':len(items)})
+    
+    
 
 class ItemAddPage(BaseRequestHandler):
   def get(self, vendor_name):

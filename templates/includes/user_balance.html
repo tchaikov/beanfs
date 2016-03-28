@@ -16,17 +16,17 @@
 	  <table class="bars" cellspacing="0" cellpadding="0" width="100%">
 	    <tbody>
 	      <tr style="height: 0.9em;">
-		<td style="background-color: rgb(255,255,255); width:{{ b.own.percent }}%;"/>
-		<td class="greenLight" title="this guy own you a lot" style="border-right: 1px solid rgb(204,179,171); width: {{ b.own.comp_percent }}%;"/>
+		<td style="background-color: rgb(255,255,255); width:{{ b.own.comp_percent }}%;"/>
+		<td class="glight" title="this guy own you a lot" style="border-right: 1px solid rgb(204,179,171); width: {{ b.own.percent }}%;"/>
 	      </tr>
 	    </tbody>
 	  </table>
 	  </td>
 	<td style="width: 38%;">
-	  <table class="bars" cellspacing="0" cellpadding="0" width="100">
+	  <table class="bars" cellspacing="0" cellpadding="0" width="100%">
 	    <tbody>
 	      <tr style="height: 0.9em;">
-		<td class="redLight" title="you own this guy a lot" style="width: {{ b.lend.percent }}%;"/>
+		<td class="rlight" title="you own this guy a lot" style="width: {{ b.lend.percent }}%;"/>
 		<td style="background-color: rgb(255,255,255); width: {{ b.lend.comp_percent }}%;"/>
 	      </tr>
 	    </tbody>

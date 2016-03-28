@@ -4,7 +4,9 @@
 {% block body %}
   <ul class="vendorlist">
     {% for vendor in vendors %}
-      <li>{{vendor.name|escape}}|{{vendor.phone|escape}}</li>
+      <li>
+	<a href="/v/{{vendor.name}}/item/list">{{vendor.name|escape}}|{{vendor.phone|escape}}</a>
+      </li>
     {% endfor %}
   </ul>
 {% endblock %}

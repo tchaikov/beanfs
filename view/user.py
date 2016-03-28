@@ -5,7 +5,7 @@ from google.appengine.ext import db
 from django.utils import simplejson
 
 from base import BaseRequestHandler
-from control import balance
+from control.balance import UserBalance, Balance
 from models import Vendor, User, Group, Event
 from forms import UserForm
 from utils import exists_by_property, get1_by_property
@@ -32,7 +32,7 @@ class UserAddPage(BaseRequestHandler):
         user.who = users.get_current_user()
         user.put()
         for group in self.request.POST.getall('group'):
-          user.join(Group.get(group))
+          user.join(Group.get_by_id(group))
         self.redirect('/u/%s/profile' % user.name)
       else:
         logging.debug('user %s already exists!' % user.name)
@@ -40,12 +40,18 @@ class UserAddPage(BaseRequestHandler):
                       {'form':data,
                        'groups':Group.all()})
       
-
+class UserJoinPage(BaseRequestHandler):
+  def post(self, user_id):
+    user = User.get_current_user()
+    for group in self.request.POST.getall('group'):
+      user.join(Group.get_by_id(long(group)))
+    self.redirect('/u/%s/profile' % user.name)
+    
 class UserProfilePage(BaseRequestHandler):
   def get_balances(self, user):
-    user_balance = balance.UserBalance(user)
+    user_balance = UserBalance(user.who)
     balances, total_amount, max_amount = user_balance.get_balances()
-    total = balance.Balance(amount=total_amount, name="Total", max_amount=max_amount)
+    total = Balance(amount=total_amount, name="Total", max_amount=max_amount)
     balances.append(total)
     return balances
   
